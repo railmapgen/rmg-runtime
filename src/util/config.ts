@@ -1,21 +1,13 @@
-import packageJson from '../../package.json';
+const HOSTNAME = window.location.hostname;
 
-export enum Environments {
-    DEV = 'DEV',
-    UAT = 'UAT',
-    PRD = 'PRD',
-}
-
-export const getEnvironment = () => {
-    if (window.location.hostname === 'localhost') {
-        return Environments.DEV;
-    } else if (window.location.hostname.includes('uat')) {
-        return Environments.UAT;
+export const _getInstance = () => {
+    if (HOSTNAME.endsWith('railmapgen.github.io')) {
+        return 'GitHub';
+    } else if (HOSTNAME.endsWith('railmapgen.gitlab.io')) {
+        return 'GitLab';
+    } else if (HOSTNAME === 'localhost' || HOSTNAME === '127.0.0.1') {
+        return 'localhost';
     } else {
-        return Environments.PRD;
+        return 'unknown';
     }
-};
-
-export const getVersion = () => {
-    return packageJson.version;
 };
