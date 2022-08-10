@@ -24,7 +24,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # legacy
-/dist
+dist/
 
 # environment
 /.vscode

@@ -1,7 +1,12 @@
-import { _getInstance } from './util/config';
+import Config from './util/config';
+
+const config = new Config();
 
 const rmgRuntime = {
-    getInstance: _getInstance,
+    getAppName: () => config.component,
+    getAppVersion: () => config.version,
+    getInstance: () => config.instance,
+    isReady: () => config.isReady,
 };
 
 export default rmgRuntime;

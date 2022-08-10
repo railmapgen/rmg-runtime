@@ -1,13 +1,37 @@
-const HOSTNAME = window.location.hostname;
+export default class Config {
+    private _component: string = 'rmg-unknown';
+    private _version: string = 'unknown';
+    private _instance: string = 'unknown';
+    private _isReady: boolean = false;
 
-export const _getInstance = () => {
-    if (HOSTNAME.endsWith('railmapgen.github.io')) {
-        return 'GitHub';
-    } else if (HOSTNAME.endsWith('railmapgen.gitlab.io')) {
-        return 'GitLab';
-    } else if (HOSTNAME === 'localhost' || HOSTNAME === '127.0.0.1') {
-        return 'localhost';
-    } else {
-        return 'unknown';
+    constructor() {
+        this.fetchInfoJson().then(() => (this._isReady = true));
     }
-};
+
+    private async fetchInfoJson() {
+        const res = await fetch('./info.json');
+        if (res.ok) {
+            const info = await res.json();
+
+            this._component = info.component;
+            this._version = info.version;
+            this._instance = info.instance;
+        }
+    }
+
+    get component(): string {
+        return this._component;
+    }
+
+    get version(): string {
+        return this._version;
+    }
+
+    get instance(): string {
+        return this._instance;
+    }
+
+    get isReady(): boolean {
+        return this._isReady;
+    }
+}
