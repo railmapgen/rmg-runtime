@@ -43,7 +43,6 @@ echo "Build Success: $APP_NAME-$RMG_VER"
 echo "::set-output name=RMG_VER::$RMG_VER"
 
 # Set up .npmrc for publishing
-cd ../
 cat >> ./.npmrc << EOF
 //registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}
 registry=https://registry.npmjs.org/
