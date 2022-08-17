@@ -25,6 +25,7 @@ const start = async () => {
 
     addListItem(ul, 'appName', rmgRuntime.getAppName());
     addListItem(ul, 'appVersion', rmgRuntime.getAppVersion());
+    addListItem(ul, 'env', rmgRuntime.getEnv());
     addListItem(ul, 'instance', rmgRuntime.getInstance());
     addListItem(ul, 'msSinceStartUp', rmgRuntime.getMsSinceStartUp());
 };

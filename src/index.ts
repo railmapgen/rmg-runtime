@@ -6,6 +6,7 @@ const config = new Config();
 const rmgRuntime = {
     getAppName: () => config.component,
     getAppVersion: () => config.version,
+    getEnv: () => config.environment,
     getInstance: () => config.instance,
     isReady: () => config.isReady,
 
