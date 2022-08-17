@@ -15,18 +15,13 @@ const addListItem = (ul, key, value) => {
 };
 
 const start = async () => {
-    while (!rmgRuntime.isReady()) {
-        $('#root').textContent += 'rmgRuntime is not yet ready...\n';
-        await waitFor(300);
-    }
-
     const ul = document.createElement('ul');
     $('#root').append(ul);
 
-    addListItem(ul, 'appName', rmgRuntime.getAppName());
-    addListItem(ul, 'appVersion', rmgRuntime.getAppVersion());
-    addListItem(ul, 'env', rmgRuntime.getEnv());
-    addListItem(ul, 'instance', rmgRuntime.getInstance());
+    rmgRuntime.getAppName().then(value => addListItem(ul, 'appName', value));
+    rmgRuntime.getAppVersion().then(value => addListItem(ul, 'appVersion', value));
+    rmgRuntime.getEnv().then(value => addListItem(ul, 'env', value));
+    rmgRuntime.getInstance().then(value => addListItem(ul, 'instance', value));
     addListItem(ul, 'msSinceStartUp', rmgRuntime.getMsSinceStartUp());
 };
 

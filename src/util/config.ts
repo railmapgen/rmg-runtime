@@ -1,14 +1,18 @@
 import { RmgEnv, RmgRuntimeInfoConfig, RmgRuntimeInstance } from './types';
+import { waitFor } from './util';
 
 export default class Config {
     private _component = 'rmg-unknown';
     private _version = 'unknown';
     private _environment = RmgEnv.PRD;
     private _instance = RmgRuntimeInstance.UNKNOWN;
-    private _isReady = false;
+
+    private _isSettled = false;
 
     constructor() {
-        this.fetchInfoJson().then(() => (this._isReady = true));
+        this.fetchInfoJson().finally(() => {
+            this._isSettled = true;
+        });
     }
 
     private async fetchInfoJson() {
@@ -24,23 +28,41 @@ export default class Config {
         }
     }
 
-    get component(): string {
+    private async isSettled() {
+        const MAX_ATTEMPTS = 20;
+        let attempt = 0;
+
+        while (attempt++ < MAX_ATTEMPTS) {
+            if (this._isSettled) {
+                return;
+            } else {
+                console.log(`[rmg-runtime] Config is not ready yet. Attempt: ${attempt}/${MAX_ATTEMPTS}`);
+                await waitFor(500);
+            }
+        }
+
+        this._isSettled = true; // mark as true
+        console.error('[rmg-runtime] Failed to load config after 10 seconds');
+        return;
+    }
+
+    async getComponent(): Promise<string> {
+        await this.isSettled();
         return this._component;
     }
 
-    get version(): string {
+    async getVersion(): Promise<string> {
+        await this.isSettled();
         return this._version;
     }
 
-    get environment(): RmgEnv {
+    async getEnvironment(): Promise<RmgEnv> {
+        await this.isSettled();
         return this._environment;
     }
 
-    get instance(): string {
+    async getInstance(): Promise<RmgRuntimeInstance> {
+        await this.isSettled();
         return this._instance;
-    }
-
-    get isReady(): boolean {
-        return this._isReady;
     }
 }
