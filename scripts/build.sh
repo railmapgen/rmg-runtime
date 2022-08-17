@@ -33,16 +33,7 @@ fi
 
 
 ### BUILD
-mkdir -p $UAT_REPO_NAME/"$APP_NAME"/
-
 CI='' npm run build
-cp -r build/ $UAT_REPO_NAME/"$APP_NAME"/"$RMG_VER"/
-
-### PUSH TAG AND COMMIT
-if [ "$BRANCH" = "main" ]
-then
-  git push --atomic origin HEAD "${APP_NAME}-${RMG_VER}"
-fi
 
 ### UPLOAD ARTIFACTS
 cd $UAT_REPO_NAME/

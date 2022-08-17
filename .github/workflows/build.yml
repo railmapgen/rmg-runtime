@@ -17,9 +17,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
 
-      - name: Clone UAT repo
-        run: git clone --depth 1 https://wongchito:${{ secrets.RMG_BUILD_AND_RELEASE }}@github.com/uat-railmapgen/rmg-repositories.git
-
       - name: Build
         run: |
           chmod +x ./scripts/build.sh
