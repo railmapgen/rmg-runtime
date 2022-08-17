@@ -49,5 +49,12 @@
         "moduleNameMapper": {
             "\\.(css|less)$": "identity-obj-proxy"
         }
-    }
+    },
+    "main": "./dist/index.js",
+    "exports": {
+        ".": "./dist/index.js"
+    },
+    "files": [
+        "dist"
+    ]
 }
