@@ -1,6 +1,6 @@
 {
     "homepage": "https://railmapgen.github.io/rmg-runtime",
-    "name": "rmg-runtime",
+    "name": "@railmapgen/rmg-runtime",
     "repository": "github:railmapgen/rmg-runtime",
     "bugs": {
         "url": "https://github.com/railmapgen/rmg-runtime/issues"
