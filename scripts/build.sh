@@ -31,16 +31,14 @@ else
   # git tag -a "${APP_NAME}-${RMG_VER}" -m "${APP_NAME}-${RMG_VER}"
 fi
 
-
 ### BUILD
 CI='' npm run build
 
-### UPLOAD ARTIFACTS
-cd $UAT_REPO_NAME/
-git add .
-git commit -m "Build version $APP_NAME-$RMG_VER"
-git push --force
-
+### PUSH TAG AND COMMIT
+if [ "$BRANCH" = "main" ]
+then
+  git push --atomic origin HEAD "${APP_NAME}-${RMG_VER}"
+fi
 
 echo "Build Success: $APP_NAME-$RMG_VER"
 echo "::set-output name=RMG_VER::$RMG_VER"
