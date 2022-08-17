@@ -26,6 +26,9 @@ const start = async () => {
     addListItem(ul, 'appName', rmgRuntime.getAppName());
     addListItem(ul, 'appVersion', rmgRuntime.getAppVersion());
     addListItem(ul, 'instance', rmgRuntime.getInstance());
+    addListItem(ul, 'msSinceStartUp', rmgRuntime.getMsSinceStartUp());
 };
 
-start().then();
+waitFor(Math.random() * 3000).then(() => {
+    return start();
+});
