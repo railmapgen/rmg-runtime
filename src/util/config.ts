@@ -1,8 +1,10 @@
+import { InfoConfig } from './types';
+
 export default class Config {
-    private _component: string = 'rmg-unknown';
-    private _version: string = 'unknown';
-    private _instance: string = 'unknown';
-    private _isReady: boolean = false;
+    private _component = 'rmg-unknown';
+    private _version = 'unknown';
+    private _instance = 'unknown';
+    private _isReady = false;
 
     constructor() {
         this.fetchInfoJson().then(() => (this._isReady = true));
@@ -11,7 +13,7 @@ export default class Config {
     private async fetchInfoJson() {
         const res = await fetch('./info.json');
         if (res.ok) {
-            const info = await res.json();
+            const info = (await res.json()) as InfoConfig;
 
             this._component = info.component;
             this._version = info.version;
