@@ -16,9 +16,9 @@
     "downlevelIteration": true,
     "module": "esnext",
     "moduleResolution": "node",
+    "declaration": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true
   },
   "include": [
