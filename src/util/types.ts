@@ -17,3 +17,9 @@ export interface RmgRuntimeInfoConfig {
     environment: RmgEnv;
     instance: RmgRuntimeInstance;
 }
+
+export type ChannelEventHandler = (data: any) => void;
+export enum Events {
+    SET_LANGUAGE = 'SET_LANGUAGE',
+    OPEN_APP = 'OPEN_APP',
+}

@@ -1,5 +1,6 @@
 import Config from './service/config';
 import frame from './service/frame';
+import settings from './service/settings';
 
 const startUpTime = new Date();
 const config = new Config();
@@ -13,6 +14,13 @@ const rmgRuntime = {
 
     // frame
     isStandaloneWindow: frame.isStandaloneWindow,
+    openApp: frame.openApp,
+    onAppOpen: frame.onAppOpen,
+
+    // settings
+    setLanguage: settings.setLanguage,
+    getLanguage: settings.getLanguage,
+    onLanguageChange: settings.onLanguageChange,
 
     // benchmark
     getMsSinceStartUp: () => {
@@ -20,4 +28,5 @@ const rmgRuntime = {
     },
 };
 
+(window as any).rmgRuntime = rmgRuntime;
 export default rmgRuntime;
