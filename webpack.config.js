@@ -1,9 +1,12 @@
 const path = require('path');
 
 module.exports = {
-    entry: './local/index.js',
+    entry: {
+        main: './local/index.js',
+        frame: './local/frame.js'
+    },
     output: {
-        filename: 'main.js',
+        filename: '[name].js',
         path: path.resolve(__dirname, 'local', 'dist')
     },
     mode: 'development'

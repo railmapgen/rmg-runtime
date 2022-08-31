@@ -23,6 +23,7 @@ const start = async () => {
     rmgRuntime.getEnv().then(value => addListItem(ul, 'env', value));
     rmgRuntime.getInstance().then(value => addListItem(ul, 'instance', value));
     addListItem(ul, 'msSinceStartUp', rmgRuntime.getMsSinceStartUp());
+    addListItem(ul, 'isStandaloneWindow', rmgRuntime.isStandaloneWindow());
 };
 
 waitFor(Math.random() * 3000).then(() => {
