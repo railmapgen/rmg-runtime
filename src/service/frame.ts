@@ -5,6 +5,14 @@ const isStandaloneWindow = () => {
     return !window.frameElement;
 };
 
+const injectCss = () => {
+    if (!isStandaloneWindow()) {
+        const style = document.createElement('style');
+        style.textContent = `.rmg-window__header { display: none; }`;
+        document.head.append(style);
+    }
+};
+
 const openApp = (appId: string) => {
     channel.postEvent(Events.OPEN_APP, appId);
 };
@@ -15,6 +23,7 @@ const onAppOpen = (callback: ChannelEventHandler) => {
 
 export default {
     isStandaloneWindow,
+    injectCss,
     openApp,
     onAppOpen,
 };

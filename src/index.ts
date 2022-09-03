@@ -13,6 +13,7 @@ const rmgRuntime = {
 
     // frame
     isStandaloneWindow: frame.isStandaloneWindow,
+    injectCss: frame.injectCss,
     openApp: frame.openApp,
     onAppOpen: frame.onAppOpen,
 
