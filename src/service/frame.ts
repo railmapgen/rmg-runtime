@@ -8,7 +8,7 @@ const isStandaloneWindow = () => {
 const injectCss = () => {
     if (!isStandaloneWindow()) {
         const style = document.createElement('style');
-        style.textContent = `.rmg-window__header { display: none; }`;
+        style.textContent = `.rmg-window__header{display: none !important;}`;
         document.head.append(style);
     }
 };
