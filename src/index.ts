@@ -29,4 +29,5 @@ const rmgRuntime = {
 };
 
 (window as any).rmgRuntime = rmgRuntime;
+export * from './util/rmg-types';
 export default rmgRuntime;

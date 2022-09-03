@@ -1,10 +1,11 @@
-import { RmgEnv, RmgRuntimeInfoConfig, RmgRuntimeInstance } from '../util/types';
+import { RmgRuntimeInfoConfig } from '../util/types';
 import { waitFor } from '../util/util';
+import { RmgEnv, RmgInstance } from '../util/rmg-types';
 
 let component = 'rmg-unknown';
 let version = 'unknown';
 let environment = RmgEnv.PRD;
-let instance = RmgRuntimeInstance.UNKNOWN;
+let instance = RmgInstance.UNKNOWN;
 let isSettled = false;
 
 const fetchInfoJson = async () => {
@@ -53,7 +54,7 @@ const getEnvironment = async (): Promise<RmgEnv> => {
     return environment;
 };
 
-const getInstance = async (): Promise<RmgRuntimeInstance> => {
+const getInstance = async (): Promise<RmgInstance> => {
     await waitForSettled();
     return instance;
 };
