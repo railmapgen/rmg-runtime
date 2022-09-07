@@ -10,7 +10,8 @@ let isSettled = false;
 
 const fetchInfoJson = async () => {
     const basePath = window.location.pathname.split('/')[1];
-    const res = await fetch(`/${basePath}/info.json`);
+    const url = basePath ? `/${basePath}/info.json` : '/info.json';
+    const res = await fetch(url);
     if (res.ok) {
         const info = (await res.json()) as RmgRuntimeInfoConfig;
 
