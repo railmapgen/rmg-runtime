@@ -18,10 +18,10 @@ const start = async () => {
     const ul = document.createElement('ul');
     $('#root').append(ul);
 
-    rmgRuntime.getAppName().then(value => addListItem(ul, 'appName', value));
-    rmgRuntime.getAppVersion().then(value => addListItem(ul, 'appVersion', value));
-    rmgRuntime.getEnv().then(value => addListItem(ul, 'env', value));
-    rmgRuntime.getInstance().then(value => addListItem(ul, 'instance', value));
+    addListItem(ul, 'appName', rmgRuntime.getAppName());
+    addListItem(ul, 'appVersion', rmgRuntime.getAppVersion());
+    addListItem(ul, 'env', rmgRuntime.getEnv());
+    addListItem(ul, 'instance', rmgRuntime.getInstance());
     addListItem(ul, 'msSinceStartUp', rmgRuntime.getMsSinceStartUp());
     addListItem(ul, 'isStandaloneWindow', rmgRuntime.isStandaloneWindow());
 
@@ -30,6 +30,10 @@ const start = async () => {
     rmgRuntime.openApp('rmg');
 };
 
-waitFor(Math.random() * 3000).then(() => {
-    return start();
-});
+waitFor(Math.random() * 3000)
+    .then(() => {
+        return rmgRuntime.ready();
+    })
+    .then(() => {
+        return start();
+    });

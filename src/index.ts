@@ -5,6 +5,11 @@ import settings from './service/settings';
 const startUpTime = new Date();
 
 const rmgRuntime = {
+    // ready
+    ready: async () => {
+        await Promise.all([config.waitForSettled()]);
+    },
+
     // config
     getAppName: config.getComponent,
     getAppVersion: config.getVersion,

@@ -40,23 +40,19 @@ const waitForSettled = async () => {
     return;
 };
 
-const getComponent = async (): Promise<string> => {
-    await waitForSettled();
+const getComponent = (): string => {
     return component;
 };
 
-const getVersion = async (): Promise<string> => {
-    await waitForSettled();
+const getVersion = (): string => {
     return version;
 };
 
-const getEnvironment = async (): Promise<RmgEnv> => {
-    await waitForSettled();
+const getEnvironment = (): RmgEnv => {
     return environment;
 };
 
-const getInstance = async (): Promise<RmgInstance> => {
-    await waitForSettled();
+const getInstance = (): RmgInstance => {
     return instance;
 };
 
@@ -65,6 +61,7 @@ fetchInfoJson().finally(() => {
 });
 
 export default {
+    waitForSettled,
     getComponent,
     getVersion,
     getEnvironment,
