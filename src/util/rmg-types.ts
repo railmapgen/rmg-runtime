@@ -7,6 +7,7 @@ export enum RmgEnv {
 export enum RmgInstance {
     GITHUB = 'GitHub',
     GITLAB = 'GitLab',
+    BITBUCKET = 'Bitbucket',
     LOCALHOST = 'localhost',
     UNKNOWN = 'unknown',
 }
