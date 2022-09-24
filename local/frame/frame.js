@@ -1,8 +1,12 @@
-import rmgRuntime from '../../dist';
+import rmgRuntime from '../../src';
 
 const $ = document.querySelector.bind(document);
 
 rmgRuntime.ready().then(() => {
+    if ($('#frame') == null) {
+        return;
+    }
+
     $('#frame').innerHTML += 'isStandaloneWindow: ' + rmgRuntime.isStandaloneWindow();
     rmgRuntime.injectCss();
 

@@ -1,4 +1,4 @@
-import rmgRuntime from '../dist/index.js';
+import rmgRuntime from '../src';
 
 const $ = document.querySelector.bind(document);
 
@@ -35,5 +35,8 @@ waitFor(Math.random() * 3000)
         return rmgRuntime.ready();
     })
     .then(() => {
+        if ($('#root') === null) {
+            return;
+        }
         return start();
     });
