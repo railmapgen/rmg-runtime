@@ -1,8 +1,7 @@
 import config from './service/config';
 import frame from './service/frame';
 import settings from './service/settings';
-
-const startUpTime = new Date();
+import benchmark from './service/benchmark';
 
 const rmgRuntime = {
     // ready
@@ -28,9 +27,7 @@ const rmgRuntime = {
     onLanguageChange: settings.onLanguageChange,
 
     // benchmark
-    getMsSinceStartUp: () => {
-        return new Date().getTime() - startUpTime.getTime();
-    },
+    getMsSinceStartUp: benchmark.getMsSinceStartUp,
 };
 
 (window as any).rmgRuntime = rmgRuntime;
