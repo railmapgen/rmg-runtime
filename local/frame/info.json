@@ -1,0 +1,6 @@
+{
+    "component": "rmg-runtime-frame",
+    "version": "1.2.3",
+    "environment": "DEV",
+    "instance": "localhost"
+}

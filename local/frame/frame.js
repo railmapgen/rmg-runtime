@@ -1,4 +1,4 @@
-import rmgRuntime from '../dist/index.js';
+import rmgRuntime from '../../dist';
 
 const $ = document.querySelector.bind(document);
 
