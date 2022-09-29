@@ -2,6 +2,7 @@ import config from './service/config';
 import frame from './service/frame';
 import settings from './service/settings';
 import benchmark from './service/benchmark';
+import storage from './service/storage';
 
 const rmgRuntime = {
     // ready
@@ -25,6 +26,9 @@ const rmgRuntime = {
     setLanguage: settings.setLanguage,
     getLanguage: settings.getLanguage,
     onLanguageChange: settings.onLanguageChange,
+
+    // storage
+    clearStorageForCurrentApp: storage.clearStorageForCurrentApp,
 
     // benchmark
     getMsSinceStartUp: benchmark.getMsSinceStartUp,
