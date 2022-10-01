@@ -1,4 +1,5 @@
 import config from './service/config';
+import eventLogger from './service/event-logger';
 import frame from './service/frame';
 import settings from './service/settings';
 import benchmark from './service/benchmark';
@@ -15,6 +16,9 @@ const rmgRuntime = {
     getAppVersion: config.getVersion,
     getEnv: config.getEnvironment,
     getInstance: config.getInstance,
+
+    // event
+    event: eventLogger.customEvent,
 
     // frame
     isStandaloneWindow: frame.isStandaloneWindow,
