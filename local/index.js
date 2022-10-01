@@ -39,4 +39,7 @@ waitFor(Math.random() * 3000)
             return;
         }
         return start();
+    })
+    .then(() => {
+        rmgRuntime.event('APP_LOAD', {});
     });

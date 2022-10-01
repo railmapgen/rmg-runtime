@@ -1,7 +1,6 @@
-import { waitFor } from '../util/util';
 import config from './config';
 
-let dataLayer: any = [];
+(window as any).dataLayer = (window as any).dataLayer || [];
 
 const installGtag = () => {
     const script = document.createElement('script');
@@ -10,45 +9,29 @@ const installGtag = () => {
     document.head.append(script);
 };
 
-const waitForSettled = async () => {
-    const MAX_ATTEMPTS = 20;
-    let attempt = 0;
-
-    while (attempt++ < MAX_ATTEMPTS) {
-        if ((window as any).dataLayer) {
-            dataLayer = (window as any).dataLayer;
-            return;
-        } else {
-            console.log(`[rmg-runtime] EventLogger is not ready yet. Attempt: ${attempt}/${MAX_ATTEMPTS}`);
-            await waitFor(500);
-        }
-    }
-
-    console.error('[rmg-runtime] Failed to load EventLogger after 10 seconds');
-    return;
-};
-
-const gtag = (...args: any) => {
-    dataLayer.push(args);
-};
+function gtag(...args: any) {
+    // eslint-disable-next-line prefer-rest-params
+    return (window as any).dataLayer.push(arguments);
+}
 
 const customEvent = (type: string, data: Record<string, any>) => {
-    gtag('event', type, {
+    gtag('event', type, data);
+};
+
+const initLogger = () => {
+    installGtag();
+
+    gtag('js', new Date());
+    gtag('config', 'G-2HP8Y4MRRQ', {
         appName: config.getComponent(),
         version: config.getVersion(),
         environment: config.getEnvironment(),
         instance: config.getInstance(),
-        ...data,
     });
 };
 
-const start = async () => {
-    installGtag();
-    await waitForSettled();
-    gtag('js', new Date());
-    gtag('config', 'G-2HP8Y4MRRQ');
-};
-
-start().then();
+config.waitForSettled().then(() => {
+    initLogger();
+});
 
 export default { customEvent };
