@@ -17,8 +17,16 @@ const openApp = (appId: string) => {
     channel.postEvent(Events.OPEN_APP, appId);
 };
 
+const updateUrl = (url: string) => {
+    channel.postEvent(Events.UPDATE_URL, url);
+};
+
 const onAppOpen = (callback: ChannelEventHandler) => {
     channel.onMessage(Events.OPEN_APP, callback);
+};
+
+const onUrlUpdate = (callback: ChannelEventHandler) => {
+    channel.onMessage(Events.UPDATE_URL, callback);
 };
 
 export default {
@@ -26,4 +34,6 @@ export default {
     injectCss,
     openApp,
     onAppOpen,
+    updateUrl,
+    onUrlUpdate,
 };

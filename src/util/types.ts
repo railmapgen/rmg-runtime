@@ -7,9 +7,10 @@ export interface RmgRuntimeInfoConfig {
     instance: RmgInstance;
 }
 
-export type ChannelEventHandler = (data: any) => void;
+export type ChannelEventHandler = (data: any, frameId?: string) => void;
 
 export enum Events {
     SET_LANGUAGE = 'SET_LANGUAGE',
     OPEN_APP = 'OPEN_APP',
+    UPDATE_URL = 'UPDATE_URL',
 }

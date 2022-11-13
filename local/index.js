@@ -25,9 +25,11 @@ const start = async () => {
     addListItem(ul, 'msSinceStartUp', rmgRuntime.getMsSinceStartUp());
     addListItem(ul, 'isStandaloneWindow', rmgRuntime.isStandaloneWindow());
 
+    rmgRuntime.onUrlUpdate((data, frameId) => console.log(`Url updated to ${data} from ${frameId}`));
+    rmgRuntime.onAppOpen(data => console.log('Opening app', data));
+
     await waitFor(1000);
     rmgRuntime.setLanguage('en');
-    rmgRuntime.openApp('rmg');
 };
 
 waitFor(Math.random() * 3000)

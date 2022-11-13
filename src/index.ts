@@ -25,6 +25,8 @@ const rmgRuntime = {
     injectCss: frame.injectCss,
     openApp: frame.openApp,
     onAppOpen: frame.onAppOpen,
+    updateUrl: frame.updateUrl,
+    onUrlUpdate: frame.onUrlUpdate,
 
     // settings
     setLanguage: settings.setLanguage,
