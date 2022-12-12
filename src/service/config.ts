@@ -6,7 +6,6 @@ let component = 'rmg-unknown';
 let version = 'unknown';
 let environment = RmgEnv.PRD;
 let instance = RmgInstance.UNKNOWN;
-let isSettled = false;
 
 const fetchInfoJson = async () => {
     const basePath = window.location.pathname.split('/')[1];
@@ -23,21 +22,13 @@ const fetchInfoJson = async () => {
 };
 
 const waitForSettled = async () => {
-    const MAX_ATTEMPTS = 20;
-    let attempt = 0;
-
-    while (attempt++ < MAX_ATTEMPTS) {
-        if (isSettled) {
-            return;
-        } else {
-            console.log(`[rmg-runtime] Config is not ready yet. Attempt: ${attempt}/${MAX_ATTEMPTS}`);
-            await waitFor(500);
-        }
+    try {
+        console.log('[rmg-runtime] Loading config...');
+        await Promise.race([fetchInfoJson(), waitFor(10 * 1000)]);
+        console.log('[rmg-runtime] Config loaded!');
+    } catch (e) {
+        console.error('[rmg-runtime] Failed to load config');
     }
-
-    isSettled = true; // mark as true
-    console.error('[rmg-runtime] Failed to load config after 10 seconds');
-    return;
 };
 
 const getComponent = (): string => {
@@ -55,10 +46,6 @@ const getEnvironment = (): RmgEnv => {
 const getInstance = (): RmgInstance => {
     return instance;
 };
-
-fetchInfoJson().finally(() => {
-    isSettled = true;
-});
 
 export default {
     waitForSettled,
