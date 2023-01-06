@@ -23,7 +23,7 @@ const customEvent = (type: string, data: Record<string, any>) => {
     gtag('event', type, data);
 };
 
-const initLogger = () => {
+const init = () => {
     installGtag();
 
     gtag('js', new Date());
@@ -35,8 +35,4 @@ const initLogger = () => {
     });
 };
 
-config.waitForSettled().then(() => {
-    initLogger();
-});
-
-export default { customEvent };
+export default { init, customEvent };

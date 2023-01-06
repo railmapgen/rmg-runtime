@@ -19,7 +19,7 @@ describe('Config', () => {
         windowSpy.mockReturnValue({ pathname: '/rmg-runtime/my-route' } as any);
 
         global.fetch = mockFetch.mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
-        await config.waitForSettled();
+        await config.loadWithTimeout();
 
         expect(config.isInitialised()).toBeTruthy();
         expect(mockFetch).toBeCalledTimes(1);
@@ -30,7 +30,7 @@ describe('Config', () => {
         windowSpy.mockReturnValue({ pathname: '/' } as any);
 
         global.fetch = mockFetch.mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
-        await config.waitForSettled();
+        await config.loadWithTimeout();
 
         expect(config.isInitialised()).toBeTruthy();
         expect(mockFetch).toBeCalledTimes(1);
@@ -39,7 +39,7 @@ describe('Config', () => {
 
     it('Can catch fetch error as expected', async () => {
         global.fetch = mockFetch.mockResolvedValue({ ok: false, json: () => Promise.resolve({}) });
-        await config.waitForSettled();
+        await config.loadWithTimeout();
 
         expect(config.isInitialised()).toBeFalsy();
         expect(mockFetch).toBeCalledTimes(1);
@@ -52,7 +52,7 @@ describe('Config', () => {
         });
 
         vi.useFakeTimers();
-        config.waitForSettled();
+        config.loadWithTimeout();
 
         // resolve after 10 seconds
         vi.advanceTimersByTime(10001);

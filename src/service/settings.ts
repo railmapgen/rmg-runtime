@@ -1,6 +1,7 @@
 import channel from './channel';
 import { ChannelEventHandler, Events } from '../util/types';
-import { RMG_RUNTIME_LANGUAGE_KEY } from '../util/constant';
+import { RMG_RUNTIME_ALLOW_ANALYTICS_KEY, RMG_RUNTIME_LANGUAGE_KEY } from '../util/constant';
+import eventLogger from './event-logger';
 
 const languages = ['en', 'zh-Hans', 'zh-Hant'];
 
@@ -20,4 +21,37 @@ const onLanguageChange = (callback: ChannelEventHandler) => {
     channel.onMessage(Events.SET_LANGUAGE, callback);
 };
 
-export default { setLanguage, getLanguage, onLanguageChange };
+const isAllowAnalytics = (): boolean => {
+    // requires explicit allow
+    const isAllowAnalyticsFromStorage = window.localStorage.getItem(RMG_RUNTIME_ALLOW_ANALYTICS_KEY);
+    return isAllowAnalyticsFromStorage === 'true';
+};
+
+export interface AllowAnalyticsResponse {
+    refreshRequired: boolean;
+}
+
+const allowAnalytics = (flag: boolean): AllowAnalyticsResponse => {
+    const isPrevAllowed = isAllowAnalytics();
+
+    if (flag) {
+        if (isPrevAllowed) {
+            // do nothing
+        } else {
+            window.localStorage.setItem(RMG_RUNTIME_ALLOW_ANALYTICS_KEY, flag.toString());
+            eventLogger.init();
+        }
+        return { refreshRequired: false };
+    } else {
+        if (isPrevAllowed) {
+            // refresh required to opt-out GA
+            window.localStorage.setItem(RMG_RUNTIME_ALLOW_ANALYTICS_KEY, flag.toString());
+            return { refreshRequired: true };
+        } else {
+            // do nothing
+            return { refreshRequired: false };
+        }
+    }
+};
+
+export default { setLanguage, getLanguage, onLanguageChange, isAllowAnalytics, allowAnalytics };

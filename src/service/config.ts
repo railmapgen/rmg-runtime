@@ -32,7 +32,7 @@ const fetchInfoJson = async () => {
     }
 };
 
-const waitForSettled = async () => {
+const loadWithTimeout = async () => {
     try {
         console.log('[rmg-runtime] Loading config...');
         const result = await Promise.race([fetchInfoJson(), waitFor(10 * 1000)]);
@@ -70,7 +70,7 @@ const getInstance = (): RmgInstance => {
 _resetConfig();
 
 export default {
-    waitForSettled,
+    loadWithTimeout,
     isInitialised,
     getComponent,
     getVersion,

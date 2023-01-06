@@ -4,12 +4,31 @@ import frame from './service/frame';
 import settings from './service/settings';
 import benchmark from './service/benchmark';
 import storage from './service/storage';
+import { waitFor } from './util/util';
+
+let initialised = false;
+const init = async () => {
+    await config.loadWithTimeout();
+
+    if (settings.isAllowAnalytics()) {
+        // init GA if user previously opt-in
+        eventLogger.init();
+    }
+
+    initialised = true;
+};
+
+const ready = async () => {
+    let elapsedSeconds = 0;
+    while (elapsedSeconds <= 10 && !initialised) {
+        await waitFor(1000);
+        elapsedSeconds += 1;
+    }
+};
 
 const rmgRuntime = {
     // ready
-    ready: async () => {
-        await Promise.all([config.waitForSettled()]);
-    },
+    ready,
 
     // config
     getAppName: config.getComponent,
@@ -32,6 +51,7 @@ const rmgRuntime = {
     setLanguage: settings.setLanguage,
     getLanguage: settings.getLanguage,
     onLanguageChange: settings.onLanguageChange,
+    allowAnalytics: settings.allowAnalytics,
 
     // storage
     clearStorageForCurrentApp: storage.clearStorageForCurrentApp,
@@ -40,6 +60,7 @@ const rmgRuntime = {
     getMsSinceStartUp: benchmark.getMsSinceStartUp,
 };
 
+init().then();
 (window as any).rmgRuntime = rmgRuntime;
 export * from './util/rmg-types';
 export default rmgRuntime;
