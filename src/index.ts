@@ -13,6 +13,7 @@ const init = async () => {
     if (settings.isAnalyticsQADone()) {
         if (settings.isAllowAnalytics()) {
             // init GA if user previously opt-in
+            console.log('[rmg-runtime] User has previously allowed GA');
             eventLogger.init();
         }
     } else {

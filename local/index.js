@@ -8,33 +8,16 @@ const waitFor = ms => {
     });
 };
 
-const addListItem = (ul, key, value) => {
-    const li = document.createElement('li');
-    li.textContent = `${key}: ${value}`;
-    ul.append(li);
-};
-
 const start = async () => {
-    const ul = document.createElement('ul');
-    $('#root').append(ul);
+    $('#config-list li[data-key="appName"]').textContent += rmgRuntime.getAppName();
+    $('#config-list li[data-key="appVersion"]').textContent += rmgRuntime.getAppVersion();
+    $('#config-list li[data-key="env"]').textContent += rmgRuntime.getEnv();
+    $('#config-list li[data-key="instance"]').textContent += rmgRuntime.getInstance();
+    $('#config-list li[data-key="msSinceStartUp"]').textContent += rmgRuntime.getMsSinceStartUp();
+    $('#config-list li[data-key="isStandaloneWindow"]').textContent += rmgRuntime.isStandaloneWindow();
 
-    // display config
-    addListItem(ul, 'appName', rmgRuntime.getAppName());
-    addListItem(ul, 'appVersion', rmgRuntime.getAppVersion());
-    addListItem(ul, 'env', rmgRuntime.getEnv());
-    addListItem(ul, 'instance', rmgRuntime.getInstance());
-    addListItem(ul, 'msSinceStartUp', rmgRuntime.getMsSinceStartUp());
-    addListItem(ul, 'isStandaloneWindow', rmgRuntime.isStandaloneWindow());
-
-    const optInGA = document.createElement('button');
-    optInGA.textContent = 'opt-in GA';
-    optInGA.addEventListener('click', () => console.log(rmgRuntime.allowAnalytics(true)));
-    $('#root').append(optInGA);
-
-    const optOutGA = document.createElement('button');
-    optOutGA.textContent = 'opt-out GA';
-    optOutGA.addEventListener('click', () => console.log(rmgRuntime.allowAnalytics(false)));
-    $('#root').append(optOutGA);
+    $('#opt-in-ga').addEventListener('click', () => console.log(rmgRuntime.allowAnalytics(true)));
+    $('#opt-out-ga').addEventListener('click', () => console.log(rmgRuntime.allowAnalytics(false)));
 
     // channel testing
     rmgRuntime.onUrlUpdate((data, frameId) => console.log(`Url updated to ${data} from ${frameId}`));
