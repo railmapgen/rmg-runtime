@@ -21,6 +21,10 @@ const onLanguageChange = (callback: ChannelEventHandler) => {
     channel.onMessage(Events.SET_LANGUAGE, callback);
 };
 
+const isAnalyticsQADone = (): boolean => {
+    return window.localStorage.getItem(RMG_RUNTIME_ALLOW_ANALYTICS_KEY) !== null;
+};
+
 const isAllowAnalytics = (): boolean => {
     // requires explicit allow
     const isAllowAnalyticsFromStorage = window.localStorage.getItem(RMG_RUNTIME_ALLOW_ANALYTICS_KEY);
@@ -54,4 +58,4 @@ const allowAnalytics = (flag: boolean): AllowAnalyticsResponse => {
     }
 };
 
-export default { setLanguage, getLanguage, onLanguageChange, isAllowAnalytics, allowAnalytics };
+export default { setLanguage, getLanguage, onLanguageChange, isAnalyticsQADone, isAllowAnalytics, allowAnalytics };

@@ -10,9 +10,19 @@ let initialised = false;
 const init = async () => {
     await config.loadWithTimeout();
 
-    if (settings.isAllowAnalytics()) {
-        // init GA if user previously opt-in
-        eventLogger.init();
+    if (settings.isAnalyticsQADone()) {
+        if (settings.isAllowAnalytics()) {
+            // init GA if user previously opt-in
+            eventLogger.init();
+        }
+    } else {
+        if (frame.isStandaloneWindow() && config.getComponent() !== 'rmg-home') {
+            // init GA if QA not done but open in standalone window
+            console.warn(
+                '[rmg-runtime] App is opened in standalone window but analytics Q&A is not finished. GA will be init by default.'
+            );
+            eventLogger.init();
+        }
     }
 
     initialised = true;
@@ -51,6 +61,7 @@ const rmgRuntime = {
     setLanguage: settings.setLanguage,
     getLanguage: settings.getLanguage,
     onLanguageChange: settings.onLanguageChange,
+    isAnalyticsQADone: settings.isAnalyticsQADone,
     allowAnalytics: settings.allowAnalytics,
 
     // storage
