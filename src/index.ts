@@ -63,6 +63,7 @@ const rmgRuntime = {
     getLanguage: settings.getLanguage,
     onLanguageChange: settings.onLanguageChange,
     isAnalyticsQADone: settings.isAnalyticsQADone,
+    isAllowAnalytics: settings.isAllowAnalytics,
     allowAnalytics: settings.allowAnalytics,
 
     // storage
