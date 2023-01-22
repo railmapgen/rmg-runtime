@@ -18,6 +18,13 @@ describe('Storage', () => {
         window.localStorage.clear();
     });
 
+    it('Can dump storage based on app name as expected', () => {
+        const store = storage.getStorageForCurrentApp();
+        expect(Object.keys(store)).toHaveLength(2);
+        expect(store).toHaveProperty('rmg-runtime__item1', 'value1');
+        expect(store).toHaveProperty('rmg-runtime__item2', 'value2');
+    });
+
     it('Can clear storage based on app name as expected', () => {
         expect(window.localStorage.length).toBe(4);
         expect(window.localStorage.getItem('rmg-runtime__item1')).not.toBeNull();

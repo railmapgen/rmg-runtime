@@ -67,6 +67,7 @@ const rmgRuntime = {
     allowAnalytics: settings.allowAnalytics,
 
     // storage
+    getStorageForCurrentApp: storage.getStorageForCurrentApp,
     clearStorageForCurrentApp: storage.clearStorageForCurrentApp,
 
     // benchmark
