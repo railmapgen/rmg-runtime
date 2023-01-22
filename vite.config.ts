@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config
@@ -7,4 +9,11 @@ export default defineConfig({
     plugins: [
         // checker({ typescript: true, eslint: { lintCommand: 'eslint ./src' } }),
     ],
+    test: {
+        globals: true,
+        root: './src/',
+        environment: 'jsdom',
+        setupFiles: './setupTests.ts',
+        watch: false,
+    },
 });
