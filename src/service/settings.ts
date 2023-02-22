@@ -3,7 +3,7 @@ import { ChannelEventHandler, Events } from '../util/types';
 import { RMG_RUNTIME_ALLOW_ANALYTICS_KEY, RMG_RUNTIME_LANGUAGE_KEY } from '../util/constant';
 import eventLogger from './event-logger';
 
-const languages = ['en', 'zh-Hans', 'zh-Hant'];
+const languages = ['en', 'zh-Hans', 'zh-Hant', 'ko'];
 
 const setLanguage = (value: string) => {
     if (languages.includes(value)) {
