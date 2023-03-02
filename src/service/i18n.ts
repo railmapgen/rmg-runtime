@@ -1,4 +1,4 @@
-import i18n, { i18n as II18n, Module, Resource } from 'i18next';
+import i18n, { i18n as II18n, Module, Newable, NewableModule, Resource } from 'i18next';
 import settings from './settings';
 
 let i18nInstance: II18n;
@@ -19,7 +19,7 @@ export class I18nBuilder {
         // do nothing
     }
 
-    use(module: Module): I18nBuilder {
+    use<T extends Module>(module: T | NewableModule<T> | Newable<T>): I18nBuilder {
         i18n.use(module);
         return this;
     }
