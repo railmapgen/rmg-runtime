@@ -34,7 +34,7 @@ const setColourMode = (value: any) => {
     }
 };
 
-const getColourMode = (): typeof colourModes => {
+const getColourMode = (): (typeof colourModes)[number] => {
     const colourModeFromStorage = window.localStorage.getItem(RMG_RUNTIME_COLOUR_MODE_KEY) as any;
     return colourModeFromStorage && colourModes.includes(colourModeFromStorage) ? colourModeFromStorage : 'system';
 };
