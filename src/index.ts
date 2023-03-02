@@ -4,6 +4,7 @@ import frame from './service/frame';
 import settings from './service/settings';
 import benchmark from './service/benchmark';
 import storage from './service/storage';
+import i18n from './service/i18n';
 import { waitFor } from './util/util';
 
 let initialised = false;
@@ -72,6 +73,9 @@ const rmgRuntime = {
 
     // benchmark
     getMsSinceStartUp: benchmark.getMsSinceStartUp,
+
+    // i18n
+    i18n: i18n,
 };
 
 init().then();
