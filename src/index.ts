@@ -76,7 +76,7 @@ const rmgRuntime = {
 
     // i18n
     I18nBuilder: i18n.I18nBuilder,
-    getI18nInstance: i18n.getI18nInstance(),
+    getI18nInstance: i18n.getI18nInstance,
 };
 
 init().then();

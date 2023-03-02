@@ -80,7 +80,7 @@ export class I18nBuilder {
                 },
                 resources: this.combineResource(),
             },
-            (t, err) => {
+            (err, t) => {
                 if (err) {
                     console.error('[rmg-runtime] unexpected error occurs while initialising i18n', err);
                     return;
