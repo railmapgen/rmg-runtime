@@ -75,7 +75,7 @@ const rmgRuntime = {
     getMsSinceStartUp: benchmark.getMsSinceStartUp,
 
     // i18n
-    i18n: i18n,
+    I18nBuilder: i18n.Builder,
 };
 
 init().then();
