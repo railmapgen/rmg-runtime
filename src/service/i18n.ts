@@ -1,8 +1,12 @@
-import i18n, { Module, Resource } from 'i18next';
+import i18n, { i18n as II18n, Module, Resource } from 'i18next';
 import settings from './settings';
 
-const registerLanguageChangeListener = () => {
-    settings.onLanguageChange(language => i18n.changeLanguage(language));
+let i18nInstance: II18n;
+
+export const getI18nInstance = () => i18nInstance;
+
+const registerLanguageChangeListener = (instance: II18n) => {
+    settings.onLanguageChange(language => instance.changeLanguage(language));
 };
 
 export class I18nBuilder {
@@ -64,31 +68,35 @@ export class I18nBuilder {
     }
 
     build() {
-        i18n.init({
-            lng: this._lng,
-            fallbackLng: {
-                'zh-CN': ['zh-Hans', 'en'],
-                'zh-HK': ['zh-Hant', 'en'],
-                'zh-TW': ['zh-Hant', 'en'],
-                'zh-Hant': ['zh-HK', 'zh-TW', 'en'],
-                default: ['en'],
+        i18nInstance = i18n.createInstance(
+            {
+                lng: this._lng,
+                fallbackLng: {
+                    'zh-CN': ['zh-Hans', 'en'],
+                    'zh-HK': ['zh-Hant', 'en'],
+                    'zh-TW': ['zh-Hant', 'en'],
+                    'zh-Hant': ['zh-HK', 'zh-TW', 'en'],
+                    default: ['en'],
+                },
+                resources: this.combineResource(),
             },
-            resources: this.combineResource(),
-        })
-            .then(t => {
+            (t, err) => {
+                if (err) {
+                    console.error('[rmg-runtime] unexpected error occurs while initialising i18n', err);
+                    return;
+                }
                 document.title = t(this._appName);
-                document.documentElement.lang = i18n.language;
-            })
-            .catch(err => {
-                console.error('[rmg-runtime] unexpected error occurs while initialising i18n', err);
-            });
+                document.documentElement.lang = this._lng ?? 'en';
+            }
+        );
 
-        i18n.on('languageChanged', lng => {
+        i18nInstance.on('languageChanged', lng => {
             document.title = i18n.t(this._appName);
             document.documentElement.lang = lng;
         });
 
-        registerLanguageChangeListener();
-        return i18n;
+        registerLanguageChangeListener(i18nInstance);
+
+        return i18nInstance;
     }
 }
