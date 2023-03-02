@@ -1,6 +1,10 @@
 import channel from './channel';
 import { ChannelEventHandler, Events } from '../util/types';
-import { RMG_RUNTIME_ALLOW_ANALYTICS_KEY, RMG_RUNTIME_LANGUAGE_KEY } from '../util/constant';
+import {
+    RMG_RUNTIME_ALLOW_ANALYTICS_KEY,
+    RMG_RUNTIME_COLOUR_MODE_KEY,
+    RMG_RUNTIME_LANGUAGE_KEY,
+} from '../util/constant';
 import eventLogger from './event-logger';
 
 const languages = ['en', 'zh-Hans', 'zh-Hant', 'ko'];
@@ -19,6 +23,24 @@ const getLanguage = () => {
 
 const onLanguageChange = (callback: ChannelEventHandler) => {
     channel.onMessage(Events.SET_LANGUAGE, callback);
+};
+
+const colourModes = ['light', 'dark', 'system'] as const;
+
+const setColourMode = (value: any) => {
+    if (colourModes.includes(value)) {
+        channel.postEvent(Events.SET_COLOUR_MODE, value);
+        window.localStorage.setItem(RMG_RUNTIME_COLOUR_MODE_KEY, value);
+    }
+};
+
+const getColourMode = (): typeof colourModes => {
+    const colourModeFromStorage = window.localStorage.getItem(RMG_RUNTIME_COLOUR_MODE_KEY) as any;
+    return colourModeFromStorage && colourModes.includes(colourModeFromStorage) ? colourModeFromStorage : 'system';
+};
+
+const onColourModeChange = (callback: ChannelEventHandler) => {
+    channel.onMessage(Events.SET_COLOUR_MODE, callback);
 };
 
 const isAnalyticsQADone = (): boolean => {
@@ -58,4 +80,14 @@ const allowAnalytics = (flag: boolean): AllowAnalyticsResponse => {
     }
 };
 
-export default { setLanguage, getLanguage, onLanguageChange, isAnalyticsQADone, isAllowAnalytics, allowAnalytics };
+export default {
+    setLanguage,
+    getLanguage,
+    onLanguageChange,
+    setColourMode,
+    getColourMode,
+    onColourModeChange,
+    isAnalyticsQADone,
+    isAllowAnalytics,
+    allowAnalytics,
+};
