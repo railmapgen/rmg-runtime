@@ -5,7 +5,7 @@ const registerLanguageChangeListener = () => {
     settings.onLanguageChange(language => i18n.changeLanguage(language));
 };
 
-class Builder {
+export class I18nBuilder {
     _appName = 'RMG';
     _lng: string | undefined = undefined;
     readonly _defaultResources: Resource = {};
@@ -15,29 +15,29 @@ class Builder {
         // do nothing
     }
 
-    use(module: Module) {
+    use(module: Module): I18nBuilder {
         i18n.use(module);
         return this;
     }
 
-    withAppName(appName: string) {
+    withAppName(appName: string): I18nBuilder {
         this._appName = appName;
         return this;
     }
 
-    withLng(lng: string) {
+    withLng(lng: string): I18nBuilder {
         this._lng = lng;
         return this;
     }
 
-    withDefaultResource(resource: Record<string, Record<string, any>>) {
+    withDefaultResource(resource: Record<string, Record<string, any>>): I18nBuilder {
         Object.entries(resource).forEach(([lang, r]) => {
             this._defaultResources[lang] = r;
         });
         return this;
     }
 
-    withResource(lang: string, additionalResource: Record<string, any>) {
+    withResource(lang: string, additionalResource: Record<string, any>): I18nBuilder {
         this._resources[lang] = additionalResource;
         return this;
     }
@@ -92,5 +92,3 @@ class Builder {
         return i18n;
     }
 }
-
-export default { Builder };
