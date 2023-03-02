@@ -91,7 +91,7 @@ export class I18nBuilder {
         );
 
         i18nInstance.on('languageChanged', lng => {
-            document.title = i18n.t(this._appName);
+            document.title = i18nInstance.t(this._appName);
             document.documentElement.lang = lng;
         });
 

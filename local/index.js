@@ -25,6 +25,8 @@ const start = async () => {
 
     await waitFor(1000);
     rmgRuntime.setLanguage('en');
+
+    new rmgRuntime.I18nBuilder().withAppName('Runtime').build();
 };
 
 waitFor(Math.random() * 3000)
