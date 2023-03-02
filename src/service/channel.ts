@@ -14,7 +14,10 @@ try {
     console.warn('[rmg-runtime] Failed to initiate broadcast channel. Some features may be unavailable.', e);
 }
 
-const postEvent = (event: Events, data: any) => {
+const postEvent = (event: Events, data: any, log?: boolean) => {
+    if (log) {
+        console.log(`[rmg-runtime] Broadcasting event ${event} with data`, data);
+    }
     channel?.postMessage({ event, data, frameId: window.frameElement?.id });
 };
 

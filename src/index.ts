@@ -1,6 +1,7 @@
 import config from './service/config';
 import eventLogger from './service/event-logger';
 import frame from './service/frame';
+import channel from './service/channel';
 import settings from './service/settings';
 import benchmark from './service/benchmark';
 import storage from './service/storage';
@@ -58,6 +59,10 @@ const rmgRuntime = {
     onAppOpen: frame.onAppOpen,
     updateUrl: frame.updateUrl,
     onUrlUpdate: frame.onUrlUpdate,
+
+    // channel
+    postEvent: channel.postEvent,
+    onMessage: channel.onMessage,
 
     // settings
     setLanguage: settings.setLanguage,

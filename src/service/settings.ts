@@ -29,7 +29,7 @@ const colourModes = ['light', 'dark', 'system'] as const;
 
 const setColourMode = (value: any) => {
     if (colourModes.includes(value)) {
-        channel.postEvent(Events.SET_COLOUR_MODE, value);
+        channel.postEvent(Events.SET_COLOUR_MODE, value, true);
         window.localStorage.setItem(RMG_RUNTIME_COLOUR_MODE_KEY, value);
     }
 };
