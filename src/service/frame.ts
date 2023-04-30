@@ -1,5 +1,5 @@
 import channel from './channel';
-import { ChannelEventHandler, Events } from '../util/types';
+import { ChannelEventHandler } from '../util/types';
 
 const isStandaloneWindow = () => {
     return !window.frameElement;
