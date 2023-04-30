@@ -2,15 +2,16 @@ name: Build
 
 on:
   workflow_dispatch:
-    bump_version:
-      type: choice
-      description: Bump version
-      options:
-        - patch
-        - minor
-        - major
-      default: patch
-      required: true
+    inputs:
+      bump_version:
+        type: choice
+        description: Bump version
+        options:
+          - patch
+          - minor
+          - major
+        default: patch
+        required: true
 
 jobs:
   build:
