@@ -9,10 +9,4 @@ export interface RmgRuntimeInfoConfig {
 
 export type ChannelEventHandler = (data: any, frameId?: string) => void;
 
-export enum Events {
-    SET_LANGUAGE = 'SET_LANGUAGE',
-    SET_COLOUR_MODE = 'SET_COLOUR_MODE',
-    OPEN_APP = 'OPEN_APP',
-    UPDATE_URL = 'UPDATE_URL',
-    TOGGLE_NAV_MENU = 'TOGGLE_NAV_MENU',
-}
+export type Events = 'SET_LANGUAGE' | 'SET_COLOUR_MODE' | 'OPEN_APP' | 'UPDATE_URL' | 'TOGGLE_NAV_MENU';

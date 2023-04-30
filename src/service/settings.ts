@@ -1,5 +1,5 @@
 import channel from './channel';
-import { ChannelEventHandler, Events } from '../util/types';
+import { ChannelEventHandler } from '../util/types';
 import {
     RMG_RUNTIME_ALLOW_ANALYTICS_KEY,
     RMG_RUNTIME_COLOUR_MODE_KEY,
@@ -11,7 +11,7 @@ const languages = ['en', 'zh-Hans', 'zh-Hant', 'ko'];
 
 const setLanguage = (value: string) => {
     if (languages.includes(value)) {
-        channel.postEvent(Events.SET_LANGUAGE, value);
+        channel.postEvent('SET_LANGUAGE', value);
         window.localStorage.setItem(RMG_RUNTIME_LANGUAGE_KEY, value);
     }
 };
@@ -22,14 +22,14 @@ const getLanguage = () => {
 };
 
 const onLanguageChange = (callback: ChannelEventHandler) => {
-    channel.onMessage(Events.SET_LANGUAGE, callback);
+    channel.onMessage('SET_LANGUAGE', callback);
 };
 
 const colourModes = ['light', 'dark', 'system'] as const;
 
 const setColourMode = (value: any) => {
     if (colourModes.includes(value)) {
-        channel.postEvent(Events.SET_COLOUR_MODE, value, true);
+        channel.postEvent('SET_COLOUR_MODE', value, true);
         window.localStorage.setItem(RMG_RUNTIME_COLOUR_MODE_KEY, value);
     }
 };
@@ -40,7 +40,7 @@ const getColourMode = (): (typeof colourModes)[number] => {
 };
 
 const onColourModeChange = (callback: ChannelEventHandler) => {
-    channel.onMessage(Events.SET_COLOUR_MODE, callback);
+    channel.onMessage('SET_COLOUR_MODE', callback);
 };
 
 const isAnalyticsQADone = (): boolean => {
