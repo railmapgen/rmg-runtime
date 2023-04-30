@@ -14,7 +14,7 @@ rmgRuntime.ready().then(async () => {
     }
 
     $('#frame').innerHTML += 'isStandaloneWindow: ' + rmgRuntime.isStandaloneWindow();
-    rmgRuntime.injectCss();
+    rmgRuntime.injectUITools();
 
     rmgRuntime.onLanguageChange(data => console.log('Changing language to', data));
 

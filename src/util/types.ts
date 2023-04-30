@@ -14,4 +14,5 @@ export enum Events {
     SET_COLOUR_MODE = 'SET_COLOUR_MODE',
     OPEN_APP = 'OPEN_APP',
     UPDATE_URL = 'UPDATE_URL',
+    TOGGLE_NAV_MENU = 'TOGGLE_NAV_MENU',
 }

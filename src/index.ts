@@ -54,11 +54,12 @@ const rmgRuntime = {
 
     // frame
     isStandaloneWindow: frame.isStandaloneWindow,
-    injectCss: frame.injectCss,
+    injectUITools: frame.injectUITools,
     openApp: frame.openApp,
     onAppOpen: frame.onAppOpen,
     updateUrl: frame.updateUrl,
     onUrlUpdate: frame.onUrlUpdate,
+    toggleNavMenu: frame.toggleNavMenu,
 
     // channel
     postEvent: channel.postEvent,

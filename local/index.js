@@ -19,6 +19,9 @@ const start = async () => {
     $('#opt-in-ga').addEventListener('click', () => console.log(rmgRuntime.allowAnalytics(true)));
     $('#opt-out-ga').addEventListener('click', () => console.log(rmgRuntime.allowAnalytics(false)));
 
+    $('#show-nav').addEventListener('click', () => rmgRuntime.toggleNavMenu(true));
+    $('#hide-nav').addEventListener('click', () => rmgRuntime.toggleNavMenu(false));
+
     // channel testing
     rmgRuntime.onUrlUpdate((data, frameId) => console.log(`Url updated to ${data} from ${frameId}`));
     rmgRuntime.onAppOpen(data => console.log('Opening app', data));
