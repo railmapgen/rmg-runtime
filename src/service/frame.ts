@@ -20,7 +20,7 @@ const injectUITools = () => {
     indentHeader.textContent = `.rmg-window__header{margin-left: 40px;}`;
 
     // first render
-    if (!isRMTMenuShown()) {
+    if (!isStandaloneWindow() && !isRMTMenuShown()) {
         document.head.appendChild(indentHeader);
     }
 
