@@ -7,6 +7,6 @@ export interface RmgRuntimeInfoConfig {
     instance: RmgInstance;
 }
 
-export type ChannelEventHandler = (data: any, frameId?: string) => void;
+export type ChannelEventHandler<T> = (data: T, frameId?: string) => void;
 
 export type Events = 'SET_LANGUAGE' | 'SET_COLOUR_MODE' | 'OPEN_APP' | 'UPDATE_URL' | 'TOGGLE_NAV_MENU';

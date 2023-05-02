@@ -7,27 +7,29 @@ import {
 } from '../util/constant';
 import eventLogger from './event-logger';
 
-const languages = ['en', 'zh-Hans', 'zh-Hant', 'ko'];
+const languages = ['en', 'zh-Hans', 'zh-Hant', 'ko'] as const;
+type SupportedLanguage = (typeof languages)[number];
 
-const setLanguage = (value: string) => {
+const setLanguage = (value: SupportedLanguage) => {
     if (languages.includes(value)) {
         channel.postEvent('SET_LANGUAGE', value);
         window.localStorage.setItem(RMG_RUNTIME_LANGUAGE_KEY, value);
     }
 };
 
-const getLanguage = () => {
-    const languageFromStorage = window.localStorage.getItem(RMG_RUNTIME_LANGUAGE_KEY);
+const getLanguage = (): SupportedLanguage => {
+    const languageFromStorage: any = window.localStorage.getItem(RMG_RUNTIME_LANGUAGE_KEY);
     return languageFromStorage && languages.includes(languageFromStorage) ? languageFromStorage : 'en';
 };
 
-const onLanguageChange = (callback: ChannelEventHandler) => {
+const onLanguageChange = (callback: ChannelEventHandler<SupportedLanguage>) => {
     channel.onMessage('SET_LANGUAGE', callback);
 };
 
 const colourModes = ['light', 'dark', 'system'] as const;
+type ColourMode = (typeof colourModes)[number];
 
-const setColourMode = (value: any) => {
+const setColourMode = (value: ColourMode) => {
     if (colourModes.includes(value)) {
         channel.postEvent('SET_COLOUR_MODE', value, true);
         window.localStorage.setItem(RMG_RUNTIME_COLOUR_MODE_KEY, value);
@@ -39,7 +41,7 @@ const getColourMode = (): (typeof colourModes)[number] => {
     return colourModeFromStorage && colourModes.includes(colourModeFromStorage) ? colourModeFromStorage : 'system';
 };
 
-const onColourModeChange = (callback: ChannelEventHandler) => {
+const onColourModeChange = (callback: ChannelEventHandler<ColourMode>) => {
     channel.onMessage('SET_COLOUR_MODE', callback);
 };
 

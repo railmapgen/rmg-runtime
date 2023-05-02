@@ -25,7 +25,7 @@ const injectUITools = () => {
     }
 
     // event listener
-    channel.onMessage('TOGGLE_NAV_MENU', isOpen => {
+    channel.onMessage('TOGGLE_NAV_MENU', (isOpen: boolean) => {
         if (isOpen) {
             try {
                 document.head.removeChild(indentHeader);
@@ -38,19 +38,23 @@ const injectUITools = () => {
     });
 };
 
-const openApp = (appId: string) => {
-    channel.postEvent('OPEN_APP', appId);
+const openApp = (appId: string, url?: string) => {
+    if (url) {
+        channel.postEvent('OPEN_APP', { appId, url });
+    } else {
+        channel.postEvent('OPEN_APP', appId);
+    }
 };
 
 const updateUrl = (url: string) => {
     channel.postEvent('UPDATE_URL', url);
 };
 
-const onAppOpen = (callback: ChannelEventHandler) => {
+const onAppOpen = (callback: ChannelEventHandler<string | { appId: string; url: string }>) => {
     channel.onMessage('OPEN_APP', callback);
 };
 
-const onUrlUpdate = (callback: ChannelEventHandler) => {
+const onUrlUpdate = (callback: ChannelEventHandler<string>) => {
     channel.onMessage('UPDATE_URL', callback);
 };
 

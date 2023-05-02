@@ -1,7 +1,7 @@
 import { ChannelEventHandler, Events } from '../util/types';
 
 const RMG_RUNTIME_CHANNEL_NAME = 'rmg-runtime-channel';
-const eventListeners: Partial<Record<Events, ChannelEventHandler[]>> = {};
+const eventListeners: Partial<Record<Events, ChannelEventHandler<any>[]>> = {};
 let channel: BroadcastChannel | undefined;
 
 try {
@@ -21,7 +21,7 @@ const postEvent = (event: Events, data: any, log?: boolean) => {
     channel?.postMessage({ event, data, frameId: window.frameElement?.id });
 };
 
-const onMessage = (event: Events, callback: ChannelEventHandler) => {
+const onMessage = <T>(event: Events, callback: ChannelEventHandler<T>) => {
     if (!(event in eventListeners)) {
         eventListeners[event] = [callback];
     } else {
