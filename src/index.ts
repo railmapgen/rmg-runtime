@@ -57,6 +57,8 @@ const rmgRuntime = {
     injectUITools: frame.injectUITools,
     openApp: frame.openApp,
     onAppOpen: frame.onAppOpen,
+    closeApp: frame.closeApp,
+    onAppClose: frame.onAppClose,
     updateUrl: frame.updateUrl,
     onUrlUpdate: frame.onUrlUpdate,
     toggleNavMenu: frame.toggleNavMenu,

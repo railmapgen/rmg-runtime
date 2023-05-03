@@ -46,12 +46,20 @@ const openApp = (appId: string, url?: string) => {
     }
 };
 
+const closeApp = (appId: string) => {
+    channel.postEvent('CLOSE_APP', appId);
+};
+
 const updateUrl = (url: string) => {
     channel.postEvent('UPDATE_URL', url);
 };
 
 const onAppOpen = (callback: ChannelEventHandler<string | { appId: string; url: string }>) => {
     channel.onMessage('OPEN_APP', callback);
+};
+
+const onAppClose = (callback: ChannelEventHandler<string>) => {
+    channel.onMessage('CLOSE_APP', callback);
 };
 
 const onUrlUpdate = (callback: ChannelEventHandler<string>) => {
@@ -67,6 +75,8 @@ export default {
     injectUITools,
     openApp,
     onAppOpen,
+    closeApp,
+    onAppClose,
     updateUrl,
     onUrlUpdate,
     toggleNavMenu,
