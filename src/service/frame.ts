@@ -9,10 +9,15 @@ const isRMTMenuShown = () => {
     return !!window.frameElement?.closest('.show-menu');
 };
 
+const frameStyle = `
+body{padding: 0;}
+.rmg-window__header{transition: 0.3s ease-in-out;}
+`.trim();
+
 const injectUITools = () => {
     // add transition style
     const style = document.createElement('style');
-    style.textContent = `.rmg-window__header{transition: 0.3s ease-in-out;}`;
+    style.textContent = frameStyle;
     document.head.appendChild(style);
 
     // define indent style
@@ -39,11 +44,7 @@ const injectUITools = () => {
 };
 
 const openApp = (appId: string, url?: string) => {
-    if (url) {
-        channel.postEvent('OPEN_APP', { appId, url });
-    } else {
-        channel.postEvent('OPEN_APP', appId);
-    }
+    channel.postEvent('OPEN_APP', { appId, url });
 };
 
 const closeApp = (appId: string) => {
