@@ -1,6 +1,6 @@
 import { ChannelEventHandler, Events } from '../util/types';
 
-const RMG_RUNTIME_CHANNEL_NAME = 'rmg-runtime-channel';
+export const RMG_RUNTIME_CHANNEL_NAME = 'rmg-runtime-channel';
 const eventListeners: Partial<Record<Events, ChannelEventHandler<any>[]>> = {};
 let channel: BroadcastChannel | undefined;
 

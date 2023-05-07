@@ -1,3 +1,6 @@
+import { vi } from 'vitest';
+import { MockBroadcastChannel } from './mock-broadcast-channel';
+
 global.fetch = () => {
     return Promise.resolve({
         ok: true,
@@ -6,4 +9,4 @@ global.fetch = () => {
     }) as any;
 };
 
-export {};
+vi.stubGlobal('BroadcastChannel', MockBroadcastChannel);
