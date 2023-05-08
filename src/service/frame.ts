@@ -9,20 +9,17 @@ const isRMTMenuShown = () => {
     return !!window.frameElement?.closest('.show-menu');
 };
 
-const frameStyle = `
-body{padding: 0;}
-.rmg-window__header{transition: 0.3s ease-in-out;}
-`.trim();
-
 const injectUITools = () => {
-    // add transition style
-    const style = document.createElement('style');
-    style.textContent = frameStyle;
-    document.head.appendChild(style);
+    // add frame style
+    if (!isStandaloneWindow()) {
+        const frameStyle = document.createElement('style');
+        frameStyle.textContent = 'body{padding: 0;}';
+        document.head.appendChild(frameStyle);
+    }
 
     // define indent style
     const indentHeader = document.createElement('style');
-    indentHeader.textContent = `.rmg-window__header{margin-left: 40px;}`;
+    indentHeader.textContent = '.rmg-window__header{margin-left: 40px;}';
 
     // first render
     if (!isStandaloneWindow() && !isRMTMenuShown()) {
