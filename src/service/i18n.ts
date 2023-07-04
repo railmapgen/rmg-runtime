@@ -72,10 +72,9 @@ export class I18nBuilder {
             {
                 lng: this._lng,
                 fallbackLng: {
-                    'zh-CN': ['zh-Hans', 'en'],
-                    'zh-HK': ['zh-Hant', 'en'],
-                    'zh-TW': ['zh-Hant', 'en'],
-                    'zh-Hant': ['zh-HK', 'zh-TW', 'en'],
+                    'zh-CN': ['zh-Hans', 'zh-Hant', 'en'],
+                    'zh-HK': ['zh-Hant', 'zh-Hans', 'en'],
+                    'zh-TW': ['zh-Hant', 'zh-Hans', 'en'],
                     default: ['en'],
                 },
                 resources: this.combineResource(),
