@@ -7,25 +7,19 @@ import {
 } from '../util/constant';
 import eventLogger from './event-logger';
 
-const languages = ['en', 'zh-Hans', 'zh-Hant', 'ko'] as const;
-type SupportedLanguage = (typeof languages)[number];
-
 const SET_LANGUAGE = 'SET_LANGUAGE';
 const SET_COLOUR_MODE = 'SET_COLOUR_MODE';
 
-const setLanguage = (value: SupportedLanguage) => {
-    if (languages.includes(value)) {
-        channel.postEvent(SET_LANGUAGE, value);
-        window.localStorage.setItem(RMG_RUNTIME_LANGUAGE_KEY, value);
-    }
+const setLanguage = (value: string) => {
+    channel.postEvent(SET_LANGUAGE, value);
+    window.localStorage.setItem(RMG_RUNTIME_LANGUAGE_KEY, value);
 };
 
-const getLanguage = (): SupportedLanguage => {
-    const languageFromStorage: any = window.localStorage.getItem(RMG_RUNTIME_LANGUAGE_KEY);
-    return languageFromStorage && languages.includes(languageFromStorage) ? languageFromStorage : 'en';
+const getLanguage = () => {
+    return window.localStorage.getItem(RMG_RUNTIME_LANGUAGE_KEY) || 'en';
 };
 
-const onLanguageChange = (callback: ChannelEventHandler<SupportedLanguage>) => {
+const onLanguageChange = (callback: ChannelEventHandler<string>) => {
     channel.onMessage(SET_LANGUAGE, callback);
 };
 
