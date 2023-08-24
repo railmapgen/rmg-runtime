@@ -1,6 +1,11 @@
 import channel from './channel';
 import { ChannelEventHandler } from '../util/types';
 
+const TOGGLE_NAV_MENU = 'TOGGLE_NAV_MENU';
+const OPEN_APP = 'OPEN_APP';
+const CLOSE_APP = 'CLOSE_APP';
+const UPDATE_URL = 'UPDATE_URL';
+
 const isStandaloneWindow = () => {
     return !window.frameElement;
 };
@@ -27,7 +32,7 @@ const injectUITools = () => {
     }
 
     // event listener
-    channel.onMessage('TOGGLE_NAV_MENU', (isOpen: boolean) => {
+    channel.onMessage(TOGGLE_NAV_MENU, (isOpen: boolean) => {
         if (isOpen) {
             try {
                 document.head.removeChild(indentHeader);
@@ -41,31 +46,31 @@ const injectUITools = () => {
 };
 
 const openApp = (appId: string, url?: string) => {
-    channel.postEvent('OPEN_APP', { appId, url });
+    channel.postEvent(OPEN_APP, { appId, url });
 };
 
 const closeApp = (appId: string) => {
-    channel.postEvent('CLOSE_APP', appId);
+    channel.postEvent(CLOSE_APP, appId);
 };
 
 const updateUrl = (url: string) => {
-    channel.postEvent('UPDATE_URL', url);
+    channel.postEvent(UPDATE_URL, url);
 };
 
 const onAppOpen = (callback: ChannelEventHandler<string | { appId: string; url: string }>) => {
-    channel.onMessage('OPEN_APP', callback);
+    channel.onMessage(OPEN_APP, callback);
 };
 
 const onAppClose = (callback: ChannelEventHandler<string>) => {
-    channel.onMessage('CLOSE_APP', callback);
+    channel.onMessage(CLOSE_APP, callback);
 };
 
 const onUrlUpdate = (callback: ChannelEventHandler<string>) => {
-    channel.onMessage('UPDATE_URL', callback);
+    channel.onMessage(UPDATE_URL, callback);
 };
 
 const toggleNavMenu = (isOpen: boolean) => {
-    channel.postEvent('TOGGLE_NAV_MENU', isOpen, true);
+    channel.postEvent(TOGGLE_NAV_MENU, isOpen, true);
 };
 
 export default {
