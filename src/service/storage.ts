@@ -13,7 +13,12 @@ const getPrefix = (): string => {
     return component;
 };
 
-const getStorageForCurrentApp = (): Record<string, string> => {
+const get = (key: string): string | null => {
+    const prefix = getPrefix();
+    return window.localStorage.getItem(`${prefix}-${key}`);
+};
+
+const getAll = (): Record<string, string> => {
     const prefix = getPrefix();
     const store: Record<string, string> = {};
 
@@ -30,7 +35,17 @@ const getStorageForCurrentApp = (): Record<string, string> => {
     return store;
 };
 
-const clearStorageForCurrentApp = () => {
+const set = (key: string, value: string) => {
+    const prefix = getPrefix();
+    window.localStorage.setItem(`${prefix}-${key}`, value);
+};
+
+const remove = (key: string) => {
+    const prefix = getPrefix();
+    window.localStorage.removeItem(`${prefix}-${key}`);
+};
+
+const clear = () => {
     const prefix = getPrefix();
 
     let count = 0;
@@ -45,4 +60,4 @@ const clearStorageForCurrentApp = () => {
     }
 };
 
-export default { getStorageForCurrentApp, clearStorageForCurrentApp };
+export default { get, getAll, set, remove, clear };
