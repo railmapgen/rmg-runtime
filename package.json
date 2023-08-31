@@ -7,16 +7,16 @@
     },
     "license": "GPL-3.0-only",
     "devDependencies": {
-        "@types/node": "^18.17.9",
-        "@typescript-eslint/eslint-plugin": "^6.4.1",
-        "@typescript-eslint/parser": "^6.4.1",
-        "eslint": "^8.47.0",
+        "@types/node": "^18.17.12",
+        "@typescript-eslint/eslint-plugin": "^6.5.0",
+        "@typescript-eslint/parser": "^6.5.0",
+        "eslint": "^8.48.0",
         "eslint-plugin-prettier": "^5.0.0",
         "jsdom": "^22.1.0",
-        "prettier": "^3.0.2",
-        "typescript": "^5.1.6",
+        "prettier": "^3.0.3",
+        "typescript": "^5.2.2",
         "vite": "^4.4.9",
-        "vitest": "^0.34.2"
+        "vitest": "^0.34.3"
     },
     "scripts": {
         "dev": "vite --host",
@@ -34,6 +34,6 @@
         "dist"
     ],
     "dependencies": {
-        "i18next": "^23.4.5"
+        "i18next": "^23.4.6"
     }
 }
