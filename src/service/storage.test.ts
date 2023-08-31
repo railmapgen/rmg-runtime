@@ -36,4 +36,24 @@ describe('Storage', () => {
         expect(window.localStorage.getItem('rmg-runtime__item1')).toBeNull();
         expect(window.localStorage.getItem('rmg-runtime__item2')).toBeNull();
     });
+
+    it('Can listen to storage event', () => {
+        const mockHandler1 = vi.fn();
+        const mockHandler2 = vi.fn();
+        const mockHandler3 = vi.fn();
+
+        storage.on('item3', mockHandler1);
+        storage.on('item3', mockHandler2);
+        storage.on('item4', mockHandler3);
+
+        window.dispatchEvent(
+            new StorageEvent('storage', { key: 'rmg-runtime__item3', oldValue: '123', newValue: 'abc' })
+        );
+
+        expect(mockHandler1).toBeCalledTimes(1);
+        expect(mockHandler1).toBeCalledWith('abc');
+        expect(mockHandler2).toBeCalledTimes(1);
+        expect(mockHandler2).toBeCalledWith('abc');
+        expect(mockHandler3).toBeCalledTimes(0);
+    });
 });

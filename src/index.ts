@@ -80,6 +80,7 @@ const rmgRuntime = {
 
     // storage
     storage: {
+        on: storage.on,
         get: storage.get,
         getAll: storage.getAll,
         set: storage.set,

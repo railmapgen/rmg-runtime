@@ -1,5 +1,8 @@
 import config from './config';
 
+type StorageEventHandler = (value: string | null) => void;
+const eventListeners: Partial<Record<string, StorageEventHandler[]>> = {};
+
 const getPrefix = (): string => {
     const component = config.getComponent();
     if (component === 'rmg-unknown') {
@@ -13,9 +16,25 @@ const getPrefix = (): string => {
     return component;
 };
 
+window.addEventListener('storage', ev => {
+    const { key, newValue } = ev;
+    if (key) {
+        eventListeners[key]?.forEach(cb => cb(newValue));
+    }
+});
+
+const on = (key: string, callback: StorageEventHandler) => {
+    const storageKey = `${getPrefix()}__${key}`;
+    if (!(storageKey in eventListeners)) {
+        eventListeners[storageKey] = [callback];
+    } else {
+        eventListeners[storageKey]?.push(callback);
+    }
+};
+
 const get = (key: string): string | null => {
     const prefix = getPrefix();
-    return window.localStorage.getItem(`${prefix}-${key}`);
+    return window.localStorage.getItem(`${prefix}__${key}`);
 };
 
 const getAll = (): Record<string, string> => {
@@ -37,12 +56,12 @@ const getAll = (): Record<string, string> => {
 
 const set = (key: string, value: string) => {
     const prefix = getPrefix();
-    window.localStorage.setItem(`${prefix}-${key}`, value);
+    window.localStorage.setItem(`${prefix}__${key}`, value);
 };
 
 const remove = (key: string) => {
     const prefix = getPrefix();
-    window.localStorage.removeItem(`${prefix}-${key}`);
+    window.localStorage.removeItem(`${prefix}__${key}`);
 };
 
 const clear = () => {
@@ -60,4 +79,4 @@ const clear = () => {
     }
 };
 
-export default { get, getAll, set, remove, clear };
+export default { on, get, getAll, set, remove, clear };
