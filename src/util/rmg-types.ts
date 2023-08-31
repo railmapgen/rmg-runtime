@@ -4,10 +4,4 @@ export enum RmgEnv {
     PRD = 'PRD',
 }
 
-export enum RmgInstance {
-    GITHUB = 'GitHub',
-    GITLAB = 'GitLab',
-    BITBUCKET = 'Bitbucket',
-    LOCALHOST = 'localhost',
-    UNKNOWN = 'unknown',
-}
+export type RmgInstance = 'GitHub' | 'GitLab' | 'Bitbucket' | 'Tauri' | 'localhost' | 'unknown';

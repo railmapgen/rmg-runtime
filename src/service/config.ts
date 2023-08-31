@@ -13,7 +13,7 @@ const _resetConfig = () => {
     component = 'rmg-unknown';
     version = 'unknown';
     environment = RmgEnv.PRD;
-    instance = RmgInstance.UNKNOWN;
+    instance = 'unknown';
 };
 
 const fetchInfoJson = async () => {
