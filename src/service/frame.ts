@@ -24,7 +24,7 @@ const injectUITools = () => {
 
     // define indent style
     const indentHeader = document.createElement('style');
-    indentHeader.textContent = '.rmg-window__header{margin-left: 40px;}';
+    indentHeader.textContent = '.rmg-window__header:not(.rmg-window__app-clip-header){margin-left: 40px;}';
 
     // first render
     if (!isStandaloneWindow() && !isRMTMenuShown()) {
