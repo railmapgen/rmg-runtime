@@ -32,17 +32,19 @@ const injectUITools = () => {
     }
 
     // event listener
-    channel.onMessage(TOGGLE_NAV_MENU, (isOpen: boolean) => {
-        if (isOpen) {
-            try {
-                document.head.removeChild(indentHeader);
-            } catch (e) {
-                console.warn('[rmg-runtime] Unable to remove indent style from RmgWindowHeader', e);
+    if (!isStandaloneWindow()) {
+        channel.onMessage(TOGGLE_NAV_MENU, (isOpen: boolean) => {
+            if (isOpen) {
+                try {
+                    document.head.removeChild(indentHeader);
+                } catch (e) {
+                    console.warn('[rmg-runtime] Unable to remove indent style from RmgWindowHeader', e);
+                }
+            } else {
+                document.head.appendChild(indentHeader);
             }
-        } else {
-            document.head.appendChild(indentHeader);
-        }
-    });
+        });
+    }
 };
 
 const openApp = (appId: string, url?: string) => {
