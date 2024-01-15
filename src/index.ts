@@ -6,6 +6,7 @@ import settings from './service/settings';
 import benchmark from './service/benchmark';
 import storage from './service/storage';
 import * as i18n from './service/i18n';
+import fonts from './service/fonts';
 import { waitFor } from './util/util';
 
 let initialised = false;
@@ -94,6 +95,11 @@ const rmgRuntime = {
     // i18n
     I18nBuilder: i18n.I18nBuilder,
     getI18nInstance: i18n.getI18nInstance,
+
+    // fonts
+    getLoadedFonts: fonts.getLoadedFonts,
+    loadFont: fonts.loadFont,
+    loadFontWithFallbacks: fonts.loadFontWithFallbacks,
 };
 
 init().then();

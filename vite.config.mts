@@ -9,6 +9,15 @@ export default defineConfig({
     plugins: [
         // checker({ typescript: true, eslint: { lintCommand: 'eslint ./src' } }),
     ],
+    server: {
+        proxy: {
+            '^(/fonts/)': {
+                target: 'https://railmapgen.github.io',
+                changeOrigin: true,
+                secure: false,
+            },
+        },
+    },
     test: {
         globals: true,
         root: './src/',
