@@ -1,4 +1,3 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
 import config from './config';
 import { waitFor } from '../util/util';
 
@@ -17,24 +16,20 @@ describe('Config', () => {
 
     it('Can resolve correct config path - not slash', async () => {
         windowSpy.mockReturnValue({ pathname: '/rmg-runtime/my-route' } as any);
-
-        global.fetch = mockFetch.mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
         await config.loadWithTimeout();
 
         expect(config.isInitialised()).toBeTruthy();
-        expect(mockFetch).toBeCalledTimes(1);
-        expect(mockFetch).toBeCalledWith('/rmg-runtime/info.json');
+        expect(global.fetch).toBeCalledTimes(1);
+        expect(global.fetch).toBeCalledWith('/rmg-runtime/info.json');
     });
 
     it('Can resolve correct config path - slash', async () => {
         windowSpy.mockReturnValue({ pathname: '/' } as any);
-
-        global.fetch = mockFetch.mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
         await config.loadWithTimeout();
 
         expect(config.isInitialised()).toBeTruthy();
-        expect(mockFetch).toBeCalledTimes(1);
-        expect(mockFetch).toBeCalledWith('/info.json');
+        expect(global.fetch).toBeCalledTimes(1);
+        expect(global.fetch).toBeCalledWith('/info.json');
     });
 
     it('Can catch fetch error as expected', async () => {
