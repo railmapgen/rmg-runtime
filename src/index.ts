@@ -99,7 +99,6 @@ const rmgRuntime = {
     // fonts
     getLoadedFonts: fonts.getLoadedFonts,
     loadFont: fonts.loadFont,
-    loadFontWithFallbacks: fonts.loadFontWithFallbacks,
 };
 
 init().then();
