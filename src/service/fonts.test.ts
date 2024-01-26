@@ -1,28 +1,29 @@
-import fonts, { LoadedFont } from './fonts';
+import fonts from './fonts';
+
+const originalFetch = global.fetch;
 
 describe('Fonts', () => {
     afterEach(() => {
         fonts._resetLoadedFonts();
+        global.fetch = originalFetch;
     });
 
     it('Can load local font immediately', async () => {
         const result = await fonts.loadFont('Arial', { source: 'local(Arial)' });
-        expect(result).toBeDefined();
-        expect(Array.isArray(result)).toBeFalsy();
-        expect((result as LoadedFont).font.status).toBe('loaded');
+        expect(result).toHaveLength(1);
+        expect(result![0].font.status).toBe('loaded');
     });
 
     it('Remote font is not loaded immediately', async () => {
         const result = await fonts.loadFont('Arial', { source: "url('/path/to/font')" });
-        expect(result).toBeDefined();
-        expect(Array.isArray(result)).toBeFalsy();
-        expect((result as LoadedFont).font.status).toBe('unloaded');
+        expect(result).toHaveLength(1);
+        expect(result![0].font.status).toBe('unloaded');
     });
 
     it('Can load remote font as fallback if local font is not available', async () => {
         const result = await fonts.loadFont('Remote', { source: 'local(Remote)' }, { source: "url('/path/to/font')" });
-        expect(result).toBeDefined();
-        expect((result as LoadedFont).source).toContain('url');
+        expect(result).toHaveLength(1);
+        expect(result![0].source).toContain('url');
     });
 
     it('Cannot load multiple font faces for same family', async () => {
@@ -30,12 +31,31 @@ describe('Fonts', () => {
             { source: "url('/path/to/font1')" },
             { source: "url('/path/to/font2')" },
         ]);
-        expect(Array.isArray(result)).toBeTruthy();
         expect(result).toHaveLength(2);
     });
 
     it('Cannot load a mix of local and remote font faces', async () => {
         const result = await fonts.loadFont('Arial', [{ source: 'local(Arial)' }, { source: "url('/path/to/font')" }]);
         expect(result).toBeUndefined();
+    });
+
+    it('Can get CSS stylesheet for loaded fonts', async () => {
+        global.fetch = vi.fn().mockResolvedValue({
+            blob: () => Promise.resolve(new Blob(['MOCKED'], { type: 'font/woff2' })),
+        });
+        const result = await fonts.loadFont('GenYoMin', [
+            { source: "url('/path/to/font1')", descriptors: { unicodeRange: 'U+4E00-4FFF' } },
+            { source: "url('/path/to/font2')", descriptors: { unicodeRange: 'U+5000-57FF' } },
+        ]);
+
+        // wait for fonts loaded
+        await result?.[0].font.load();
+
+        const css = await fonts.getFontCSS('GenYoMin');
+        expect(css).toBe(`@font-face {
+    font-family: 'GenYoMin';
+    src: url('data:font/woff2;base64,TU9DS0VE');
+    unicodeRange: U+4E00-4FFF;
+}`);
     });
 });
