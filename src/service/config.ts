@@ -1,6 +1,7 @@
 import { RmgRuntimeInfoConfig } from '../util/types';
 import { waitFor } from '../util/util';
 import { RmgEnv, RmgInstance } from '../util/rmg-types';
+import { RMT_ALIAS, RMT_COMPONENT_NAME, UNKNOWN_COMPONENT } from '../util/constant';
 
 let initialised: boolean;
 let component: string;
@@ -10,7 +11,7 @@ let instance: RmgInstance;
 
 const _resetConfig = () => {
     initialised = false;
-    component = 'rmg-unknown';
+    component = UNKNOWN_COMPONENT;
     version = 'unknown';
     environment = RmgEnv.PRD;
     instance = 'unknown';
@@ -52,7 +53,7 @@ const isInitialised = (): boolean => {
 };
 
 const getComponent = (): string => {
-    return component;
+    return isRMT() ? RMT_ALIAS : component;
 };
 
 const getVersion = (): string => {
@@ -67,6 +68,10 @@ const getInstance = (): RmgInstance => {
     return instance;
 };
 
+const isRMT = (): boolean => {
+    return component === RMT_COMPONENT_NAME;
+};
+
 _resetConfig();
 
 export default {
@@ -76,5 +81,6 @@ export default {
     getVersion,
     getEnvironment,
     getInstance,
+    isRMT,
     _resetConfig,
 };

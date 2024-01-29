@@ -1,18 +1,14 @@
 import config from './config';
+import { UNKNOWN_COMPONENT } from '../util/constant';
 
 type StorageEventHandler = (value: string | null) => void;
 const eventListeners: Partial<Record<string, StorageEventHandler[]>> = {};
 
 const getPrefix = (): string => {
     const component = config.getComponent();
-    if (component === 'rmg-unknown') {
+    if (component === UNKNOWN_COMPONENT) {
         throw new Error('[rmg-runtime] Unable to clear storage for unknown app');
     }
-
-    if (component === 'railmapgen.github.io') {
-        return 'rmg-home';
-    }
-
     return component;
 };
 
