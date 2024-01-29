@@ -17,14 +17,14 @@ const init = async () => {
     if (settings.isAnalyticsQADone()) {
         if (settings.isAllowAnalytics()) {
             // init GA if user previously opt-in
-            console.log('[rmg-runtime] User has previously allowed GA');
+            console.log('[runtime] User has previously allowed GA');
             eventLogger.init();
         }
     } else {
         if (frame.isStandaloneWindow() && !config.isRMT()) {
             // init GA if QA not done but open in standalone window
             console.warn(
-                '[rmg-runtime] App is opened in standalone window but analytics Q&A is not finished. GA will be init by default.'
+                '[runtime] App is opened in standalone window but analytics Q&A is not finished. GA will be init by default.'
             );
             eventLogger.init();
         }

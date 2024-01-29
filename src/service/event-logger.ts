@@ -15,7 +15,7 @@ function gtag(...args: any) {
         // eslint-disable-next-line prefer-rest-params
         return (window as any).dataLayer.push(arguments);
     } else {
-        console.log('[rmg-runtime] Not going to send event in DEV environment', args);
+        console.log('[runtime] Not going to send event in DEV environment', args);
     }
 }
 

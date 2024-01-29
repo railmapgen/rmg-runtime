@@ -39,14 +39,14 @@ const loadSingleFontFace = async (family: string, config: FontFaceConfig): Promi
         loadedFonts[family] = [{ ...config, font }];
         return true;
     } catch (e) {
-        console.warn(`[rmg-runtime] Failed to load font ${family} with source ${config.source}`, e);
+        console.warn(`[runtime] Failed to load font ${family} with source ${config.source}`, e);
         return false;
     }
 };
 
 const loadMultipleFontFaces = async (family: string, configs: FontFaceConfig[]): Promise<boolean> => {
     if (configs.some(isLocalFont)) {
-        console.error(`[rmg-runtime] Unable to load multiple FontFace for the same family ${family}`);
+        console.error(`[runtime] Unable to load multiple FontFace for the same family ${family}`);
         return false;
     }
     const fonts: LoadedFont[] = [];
@@ -87,7 +87,7 @@ const getFontCSS = async (family: string) => {
                 const isLoaded = font.font.status === 'loaded';
                 if (!isLoaded) {
                     console.warn(
-                        `[rmg-runtime] Font family ${family} is not loaded completely. Some FontFaceRules may be missing`
+                        `[runtime] Font family ${family} is not loaded completely. Some FontFaceRules may be missing`
                     );
                 }
                 return isLoaded;

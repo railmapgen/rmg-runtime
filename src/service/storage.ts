@@ -7,7 +7,7 @@ const eventListeners: Partial<Record<string, StorageEventHandler[]>> = {};
 const getPrefix = (): string => {
     const component = config.getComponent();
     if (component === UNKNOWN_COMPONENT) {
-        throw new Error('[rmg-runtime] Unable to clear storage for unknown app');
+        throw new Error('[runtime] Unable to clear storage for unknown app');
     }
     return component;
 };
@@ -68,7 +68,7 @@ const clear = () => {
         const key = window.localStorage.key(count);
         if (key?.startsWith(prefix + '__')) {
             window.localStorage.removeItem(key);
-            console.log(`[rmg-runtime] Removed item ${key}`);
+            console.log(`[runtime] Removed item ${key}`);
         } else {
             count++;
         }

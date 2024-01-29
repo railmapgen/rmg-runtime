@@ -38,7 +38,7 @@ const injectUITools = () => {
                 try {
                     document.head.removeChild(indentHeader);
                 } catch (e) {
-                    console.warn('[rmg-runtime] Unable to remove indent style from RmgWindowHeader', e);
+                    console.warn('[runtime] Unable to remove indent style from RmgWindowHeader', e);
                 }
             } else {
                 document.head.appendChild(indentHeader);

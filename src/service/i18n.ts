@@ -81,7 +81,7 @@ export class I18nBuilder {
             },
             (err, t) => {
                 if (err) {
-                    console.error('[rmg-runtime] unexpected error occurs while initialising i18n', err);
+                    console.error('[runtime] unexpected error occurs while initialising i18n', err);
                     return;
                 }
                 document.title = t(this._appName);

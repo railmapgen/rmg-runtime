@@ -35,16 +35,16 @@ const fetchInfoJson = async () => {
 
 const loadWithTimeout = async () => {
     try {
-        console.log('[rmg-runtime] Loading config...');
+        console.log('[runtime] Loading config...');
         const result = await Promise.race([fetchInfoJson(), waitFor(10 * 1000)]);
         if (!result) {
             initialised = true;
-            console.log('[rmg-runtime] Config loaded!');
+            console.log('[runtime] Config loaded!');
         } else {
-            console.error('[rmg-runtime] Failed to load config.', result);
+            console.error('[runtime] Failed to load config.', result);
         }
     } catch (e) {
-        console.error('[rmg-runtime] Failed to load config.', e);
+        console.error('[runtime] Failed to load config.', e);
     }
 };
 
