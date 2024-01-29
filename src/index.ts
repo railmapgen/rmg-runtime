@@ -7,11 +7,18 @@ import benchmark from './service/benchmark';
 import storage from './service/storage';
 import * as i18n from './service/i18n';
 import fonts from './service/fonts';
+import searchEngine from './service/search-engine';
 import { waitFor } from './util/util';
 
 let initialised = false;
 const init = async () => {
     await config.loadWithTimeout();
+
+    // SEO
+    if (config.getEnvironment() !== 'PRD' || !config.isRMT()) {
+        console.log('[runtime] Injecting noindex meta tag as this app is not PRD RMT.');
+        searchEngine.injectNoindexRule();
+    }
 
     // GA
     if (settings.isAnalyticsQADone()) {
