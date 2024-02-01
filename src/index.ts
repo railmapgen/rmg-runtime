@@ -14,11 +14,7 @@ let initialised = false;
 const init = async () => {
     await config.loadWithTimeout();
 
-    // SEO
-    if (config.getEnvironment() !== 'PRD' || !config.isRMT()) {
-        console.log('[runtime] Injecting noindex meta tag as this app is not PRD RMT.');
-        searchEngine.injectNoindexRule();
-    }
+    searchEngine.injectNoindexRule();
 
     // GA
     if (settings.isAnalyticsQADone()) {
