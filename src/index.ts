@@ -101,6 +101,7 @@ const rmgRuntime = {
     getI18nInstance: i18n.getI18nInstance,
 
     // fonts
+    getAllFonts: fonts.getAllFonts,
     getLoadedFonts: fonts.getLoadedFonts,
     loadFont: fonts.loadFont,
     getFontCSS: fonts.getFontCSS,

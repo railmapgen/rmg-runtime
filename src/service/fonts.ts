@@ -1,4 +1,4 @@
-import { readBlobAsDataURL } from '../util/util';
+import { createCachedPromise, readBlobAsDataURL } from '../util/util';
 
 type FontFaceConfig = {
     source: string;
@@ -28,6 +28,12 @@ const getCssFontFaceRule = (family: string, config: FontFaceConfig) => `@font-fa
         .map(([k, v]) => `${k}: ${v};`)
         .join('\n')}
 }`;
+
+const getAllFonts = createCachedPromise(() =>
+    fetch('/fonts/config.json').then(
+        res => res.json() as Promise<Record<string, (FontFaceConfig | FontFaceConfig[])[]>>
+    )
+);
 
 const loadSingleFontFace = async (family: string, config: FontFaceConfig): Promise<boolean> => {
     try {
@@ -61,13 +67,18 @@ const loadMultipleFontFaces = async (family: string, configs: FontFaceConfig[]):
 
 const loadFont = async (
     family: string,
-    ...configs: (FontFaceConfig | FontFaceConfig[])[]
+    ...configs: (FontFaceConfig | FontFaceConfig[] | undefined)[]
 ): Promise<undefined | LoadedFont[]> => {
     if (family in loadedFonts) {
         // TODO: consider different weight of the same font?
         return loadedFonts[family];
     }
-    for (const config of configs) {
+
+    const parsedConfigs = !configs[0]
+        ? (await getAllFonts())[family]
+        : (configs as (FontFaceConfig | FontFaceConfig[])[]);
+
+    for (const config of parsedConfigs) {
         const result = Array.isArray(config)
             ? await loadMultipleFontFaces(family, config)
             : await loadSingleFontFace(family, config);
@@ -106,6 +117,7 @@ const getFontCSS = async (family: string) => {
 };
 
 export default {
+    getAllFonts,
     getLoadedFonts,
     _resetLoadedFonts,
     loadFont,

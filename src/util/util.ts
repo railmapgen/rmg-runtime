@@ -11,3 +11,24 @@ export const readBlobAsDataURL = (blob: Blob): Promise<string> => {
         reader.readAsDataURL(blob);
     });
 };
+
+export const createCachedPromise = <T>(promiseFactory: () => Promise<T>) => {
+    let cachedResponse: Promise<T> | null;
+    let promisePending = false;
+    return async (reload?: boolean): Promise<T> => {
+        if (cachedResponse && (promisePending || !reload)) {
+            return cachedResponse;
+        }
+        cachedResponse = promiseFactory();
+        promisePending = true;
+        return cachedResponse
+            .then(response => {
+                promisePending = false;
+                return response;
+            })
+            .catch(e => {
+                cachedResponse = null;
+                throw e;
+            });
+    };
+};

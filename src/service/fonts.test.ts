@@ -8,6 +8,16 @@ describe('Fonts', () => {
         global.fetch = originalFetch;
     });
 
+    it('Can load font list if config is not specified', async () => {
+        global.fetch = vi.fn().mockResolvedValue({
+            json: () => Promise.resolve({ Arial: [{ source: 'local(Arial)' }] }),
+        });
+        const result = await fonts.loadFont('Arial');
+
+        expect(fetch).toBeCalledTimes(1);
+        expect(result).toHaveLength(1);
+    });
+
     it('Can load local font immediately', async () => {
         const result = await fonts.loadFont('Arial', { source: 'local(Arial)' });
         expect(result).toHaveLength(1);
