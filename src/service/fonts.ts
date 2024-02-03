@@ -5,13 +5,19 @@ type FontFaceConfig = {
     descriptors?: FontFaceDescriptors;
 };
 
+type FontFaceDefinition = {
+    displayName?: string;
+    url?: string;
+    configs: (FontFaceConfig | FontFaceConfig[])[];
+};
+
 type LoadedFont = FontFaceConfig & {
     font: FontFace;
 };
 
 let loadedFonts: Record<string, LoadedFont[]> = {};
 const getLoadedFonts = () => loadedFonts;
-const _resetLoadedFonts = () => (loadedFonts = {});
+export const _resetLoadedFonts = () => (loadedFonts = {});
 
 const isLocalFont = (config: FontFaceConfig) => config.source.startsWith('local');
 const getFontFaceUrl = (config: FontFaceConfig) => {
@@ -29,11 +35,13 @@ const getCssFontFaceRule = (family: string, config: FontFaceConfig) => `@font-fa
         .join('\n')}
 }`;
 
-const getAllFonts = createCachedPromise(() =>
-    fetch('/fonts/config.json').then(
-        res => res.json() as Promise<Record<string, (FontFaceConfig | FontFaceConfig[])[]>>
-    )
-);
+const createGetAllFontsPromise = () =>
+    createCachedPromise(() =>
+        fetch('/fonts/config.json').then(res => res.json() as Promise<Record<string, FontFaceDefinition>>)
+    );
+
+let getAllFonts = createGetAllFontsPromise();
+export const _resetGetAllFonts = () => (getAllFonts = createGetAllFontsPromise());
 
 const loadSingleFontFace = async (family: string, config: FontFaceConfig): Promise<boolean> => {
     try {
@@ -74,9 +82,17 @@ const loadFont = async (
         return loadedFonts[family];
     }
 
-    const parsedConfigs = !configs[0]
-        ? (await getAllFonts())[family]
-        : (configs as (FontFaceConfig | FontFaceConfig[])[]);
+    let parsedConfigs: (FontFaceConfig | FontFaceConfig[])[];
+    if (configs[0]) {
+        parsedConfigs = configs as typeof parsedConfigs;
+    } else {
+        try {
+            const allFonts = await getAllFonts();
+            parsedConfigs = allFonts[family].configs;
+        } catch (e) {
+            throw new Error('Unable to load font definition of ' + family);
+        }
+    }
 
     for (const config of parsedConfigs) {
         const result = Array.isArray(config)
@@ -119,7 +135,6 @@ const getFontCSS = async (family: string) => {
 export default {
     getAllFonts,
     getLoadedFonts,
-    _resetLoadedFonts,
     loadFont,
     getFontCSS,
 };

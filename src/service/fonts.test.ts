@@ -1,21 +1,29 @@
-import fonts from './fonts';
+import fonts, { _resetLoadedFonts, _resetGetAllFonts } from './fonts';
 
 const originalFetch = global.fetch;
 
 describe('Fonts', () => {
     afterEach(() => {
-        fonts._resetLoadedFonts();
+        _resetLoadedFonts();
+        _resetGetAllFonts();
         global.fetch = originalFetch;
     });
 
     it('Can load font list if config is not specified', async () => {
         global.fetch = vi.fn().mockResolvedValue({
-            json: () => Promise.resolve({ Arial: [{ source: 'local(Arial)' }] }),
+            json: () => Promise.resolve({ Arial: { configs: [{ source: 'local(Arial)' }] } }),
         });
         const result = await fonts.loadFont('Arial');
 
         expect(fetch).toBeCalledTimes(1);
         expect(result).toHaveLength(1);
+    });
+
+    it('Can throw error if requested font is not found in config', () => {
+        global.fetch = vi.fn().mockResolvedValue({
+            json: () => Promise.resolve({}),
+        });
+        expect(async () => await fonts.loadFont('Arial')).rejects.toThrow();
     });
 
     it('Can load local font immediately', async () => {
