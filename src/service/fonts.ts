@@ -25,7 +25,7 @@ const getFontFaceUrl = (config: FontFaceConfig) => {
     if (!path) {
         throw new Error('Invalid URL in source ' + config.source);
     }
-    return new URL(path, window.location.origin);
+    return new URL(path, window.location.href);
 };
 const getCssFontFaceRule = (family: string, config: FontFaceConfig) => `@font-face {
     font-family: '${family}';
