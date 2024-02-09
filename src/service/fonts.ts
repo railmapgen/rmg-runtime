@@ -8,14 +8,18 @@ type FontFaceConfig = {
 type FontFaceDefinition = {
     displayName?: string;
     url?: string;
+    /**
+     * A list of fallback loading options of the font. Each option can be a single
+     * FontFace constructor arguments or multiple constructor arguments.
+     */
     configs: (FontFaceConfig | FontFaceConfig[])[];
 };
 
-type LoadedFont = FontFaceConfig & {
-    font: FontFace;
+type LoadedFont = Omit<FontFaceDefinition, 'configs'> & {
+    configs: (FontFaceConfig & { font: FontFace })[];
 };
 
-let loadedFonts: Record<string, LoadedFont[]> = {};
+let loadedFonts: Record<string, LoadedFont> = {};
 const getLoadedFonts = () => loadedFonts;
 export const _resetLoadedFonts = () => (loadedFonts = {});
 
@@ -50,7 +54,7 @@ const loadSingleFontFace = async (family: string, config: FontFaceConfig): Promi
             await font.load();
         }
         document.fonts.add(font);
-        loadedFonts[family] = [{ ...config, font }];
+        loadedFonts[family] = { configs: [{ ...config, font }] };
         return true;
     } catch (e) {
         console.warn(`[runtime] Failed to load font ${family} with source ${config.source}`, e);
@@ -63,44 +67,47 @@ const loadMultipleFontFaces = async (family: string, configs: FontFaceConfig[]):
         console.error(`[runtime] Unable to load multiple FontFace for the same family ${family}`);
         return false;
     }
-    const fonts: LoadedFont[] = [];
+    const fonts: LoadedFont['configs'] = [];
     configs.forEach(config => {
         const font = new FontFace(family, config.source, config.descriptors);
         document.fonts.add(font);
         fonts.push({ ...config, font });
     });
-    loadedFonts[family] = fonts;
+    loadedFonts[family] = { configs: fonts };
     return true;
 };
 
-const loadFont = async (
-    family: string,
-    ...configs: (FontFaceConfig | FontFaceConfig[] | undefined)[]
-): Promise<undefined | LoadedFont[]> => {
+const loadFont = async (family: string, definition?: FontFaceDefinition): Promise<undefined | LoadedFont> => {
     if (family in loadedFonts) {
-        // TODO: consider different weight of the same font?
+        // use PostScript name as family name to avoid font-weight conflict
         return loadedFonts[family];
     }
 
-    let parsedConfigs: (FontFaceConfig | FontFaceConfig[])[];
-    if (configs[0]) {
-        parsedConfigs = configs as typeof parsedConfigs;
+    let parsedDefinition: FontFaceDefinition;
+    if (definition) {
+        parsedDefinition = definition;
     } else {
         try {
-            const allFonts = await getAllFonts();
-            parsedConfigs = allFonts[family].configs;
+            parsedDefinition = (await getAllFonts())[family];
         } catch (e) {
             throw new Error('Unable to load font definition of ' + family);
         }
     }
 
-    for (const config of parsedConfigs) {
+    for (const config of parsedDefinition.configs) {
         const result = Array.isArray(config)
             ? await loadMultipleFontFaces(family, config)
             : await loadSingleFontFace(family, config);
         if (result) break;
     }
-    return loadedFonts[family];
+
+    if (loadedFonts[family]) {
+        loadedFonts[family].displayName = parsedDefinition.displayName;
+        loadedFonts[family].url = parsedDefinition.url;
+        return loadedFonts[family];
+    } else {
+        return;
+    }
 };
 
 const getFontCSS = async (family: string) => {
@@ -109,7 +116,7 @@ const getFontCSS = async (family: string) => {
         throw new Error(`Font family ${family} is not loaded`);
     }
     const rules = await Promise.all(
-        fonts
+        fonts.configs
             .filter(font => {
                 const isLoaded = font.font.status === 'loaded';
                 if (!isLoaded) {
