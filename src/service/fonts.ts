@@ -1,4 +1,6 @@
 import { createCachedPromise, readBlobAsDataURL } from '../util/util';
+import channel from './channel';
+import { ChannelEventHandler } from '../util/types';
 
 type FontFaceConfig = {
     source: string;
@@ -19,10 +21,21 @@ type LoadedFont = Omit<FontFaceDefinition, 'configs'> & {
     configs: (FontFaceConfig & { font: FontFace })[];
 };
 
+// store
 let loadedFonts: Record<string, LoadedFont> = {};
 const getLoadedFonts = () => loadedFonts;
 export const _resetLoadedFonts = () => (loadedFonts = {});
 
+// broadcast
+const LOAD_REMOTE_FONT = 'LOAD_REMOTE_FONT';
+const broadcastRemoteFontLoaded = (family: string, definition: FontFaceDefinition) => {
+    channel.postEvent(LOAD_REMOTE_FONT, { family, definition }, true);
+};
+const onRemoteFontLoaded = (callback: ChannelEventHandler<{ family: string; definition: FontFaceDefinition }>) => {
+    channel.onMessage(LOAD_REMOTE_FONT, callback);
+};
+
+// utils
 const isLocalFont = (config: FontFaceConfig) => config.source.startsWith('local');
 const getFontFaceUrl = (config: FontFaceConfig) => {
     const path = config.source.match(/url\(['"](\S+)['"]\)/)?.[1];
@@ -47,11 +60,17 @@ const createGetAllFontsPromise = () =>
 let getAllFonts = createGetAllFontsPromise();
 export const _resetGetAllFonts = () => (getAllFonts = createGetAllFontsPromise());
 
-const loadSingleFontFace = async (family: string, config: FontFaceConfig): Promise<boolean> => {
+const loadSingleFontFace = async (
+    family: string,
+    config: FontFaceConfig,
+    onRemoteLoaded?: () => void
+): Promise<boolean> => {
     try {
         const font = new FontFace(family, config.source, config.descriptors);
         if (isLocalFont(config)) {
             await font.load();
+        } else {
+            font.loaded.then(onRemoteLoaded);
         }
         document.fonts.add(font);
         loadedFonts[family] = { configs: [{ ...config, font }] };
@@ -62,7 +81,11 @@ const loadSingleFontFace = async (family: string, config: FontFaceConfig): Promi
     }
 };
 
-const loadMultipleFontFaces = async (family: string, configs: FontFaceConfig[]): Promise<boolean> => {
+const loadMultipleFontFaces = async (
+    family: string,
+    configs: FontFaceConfig[],
+    onRemoteLoaded?: () => void
+): Promise<boolean> => {
     if (configs.some(isLocalFont)) {
         console.error(`[runtime] Unable to load multiple FontFace for the same family ${family}`);
         return false;
@@ -70,6 +93,7 @@ const loadMultipleFontFaces = async (family: string, configs: FontFaceConfig[]):
     const fonts: LoadedFont['configs'] = [];
     configs.forEach(config => {
         const font = new FontFace(family, config.source, config.descriptors);
+        font.loaded.then(onRemoteLoaded);
         document.fonts.add(font);
         fonts.push({ ...config, font });
     });
@@ -94,16 +118,20 @@ const loadFont = async (family: string, definition?: FontFaceDefinition): Promis
         }
     }
 
+    const onRemoteLoaded = () => {
+        broadcastRemoteFontLoaded(family, parsedDefinition);
+    };
     for (const config of parsedDefinition.configs) {
         const result = Array.isArray(config)
-            ? await loadMultipleFontFaces(family, config)
-            : await loadSingleFontFace(family, config);
+            ? await loadMultipleFontFaces(family, config, onRemoteLoaded)
+            : await loadSingleFontFace(family, config, onRemoteLoaded);
         if (result) break;
     }
 
-    if (loadedFonts[family]) {
-        loadedFonts[family].displayName = parsedDefinition.displayName;
-        loadedFonts[family].url = parsedDefinition.url;
+    const font = loadedFonts[family];
+    if (font) {
+        font.displayName = parsedDefinition.displayName;
+        font.url = parsedDefinition.url;
         return loadedFonts[family];
     } else {
         return;
@@ -144,4 +172,5 @@ export default {
     getLoadedFonts,
     loadFont,
     getFontCSS,
+    onRemoteFontLoaded,
 };

@@ -1,12 +1,24 @@
 import fonts, { _resetLoadedFonts, _resetGetAllFonts } from './fonts';
+import { RMG_RUNTIME_CHANNEL_NAME } from './channel';
+import { waitFor } from '@testing-library/dom';
 
 const originalFetch = global.fetch;
 
 describe('Fonts', () => {
+    let testChannel: BroadcastChannel;
+    let testChannelReceives: any[] = [];
+
+    beforeEach(() => {
+        testChannel = new BroadcastChannel(RMG_RUNTIME_CHANNEL_NAME);
+        testChannel.onmessage = ev => testChannelReceives.push(ev.data);
+    });
+
     afterEach(() => {
         _resetLoadedFonts();
         _resetGetAllFonts();
         global.fetch = originalFetch;
+        testChannel.close();
+        testChannelReceives = [];
     });
 
     it('Can load font list if config is not specified', async () => {
@@ -86,5 +98,18 @@ describe('Fonts', () => {
     src: url('data:font/woff2;base64,TU9DS0VE');
     unicodeRange: U+4E00-4FFF;
 }`);
+    });
+
+    it('Can broadcast remote font loaded event', async () => {
+        const arial = await fonts.loadFont('Arial', { configs: [{ source: 'local(Arial)' }] });
+        await Promise.all(arial?.configs.map(config => config.font.load()) ?? []);
+        const genyomin = await fonts.loadFont('GenYoMin', { configs: [{ source: "url('/path/to/font')" }] });
+        await Promise.all(genyomin?.configs.map(config => config.font.load()) ?? []);
+
+        await waitFor(() => expect(testChannelReceives).toHaveLength(1));
+        expect(testChannelReceives[0]).toEqual({
+            event: 'LOAD_REMOTE_FONT',
+            data: expect.objectContaining({ family: 'GenYoMin' }),
+        });
     });
 });

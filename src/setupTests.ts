@@ -8,26 +8,42 @@ global.fetch = vi.fn().mockImplementation(() => {
 
 class MockFontFace {
     family: string;
+
+    loadingResolver?: (value: MockFontFace) => void = undefined;
+    loadingRejecter?: (reason?: any) => void = undefined;
+    loadingPromise: Promise<MockFontFace>;
+
     status = 'unloaded';
 
     constructor(family: string) {
         this.family = family;
+        this.loadingPromise = new Promise<MockFontFace>((resolve, reject) => {
+            this.loadingResolver = resolve;
+            this.loadingRejecter = reject;
+        });
     }
 
     load() {
-        return new Promise<void>((resolve, reject) => {
-            this.status = 'loading';
+        if (this.status !== 'unloaded') {
+            return this.loadingPromise;
+        }
 
-            if (this.family === 'Remote') {
-                this.status = 'error';
-                reject('NetworkError');
-            } else {
-                setTimeout(() => {
-                    this.status = 'loaded';
-                    resolve();
-                }, 100);
-            }
-        });
+        this.status = 'loading';
+
+        if (this.family === 'Remote') {
+            this.status = 'error';
+            this.loadingRejecter!('NetworkError');
+        } else {
+            setTimeout(() => {
+                this.status = 'loaded';
+                this.loadingResolver!(this);
+            }, 100);
+        }
+        return this.loadingPromise;
+    }
+
+    get loaded() {
+        return this.loadingPromise;
     }
 }
 
