@@ -105,6 +105,7 @@ const rmgRuntime = {
     getLoadedFonts: fonts.getLoadedFonts,
     loadFont: fonts.loadFont,
     getFontCSS: fonts.getFontCSS,
+    onRemoteFontLoaded: fonts.onRemoteFontLoaded,
 };
 
 init().then();
