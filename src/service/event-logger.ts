@@ -19,7 +19,7 @@ function gtag(...args: any) {
     }
 }
 
-const customEvent = (type: string, data: Record<string, any>) => {
+const customEvent = (type: string, data: Record<string, any> = {}) => {
     gtag('event', type, data);
 };
 
