@@ -16,14 +16,15 @@
         "jsdom": "^24.0.0",
         "prettier": "^3.2.5",
         "typedoc": "^0.25.13",
-        "typescript": "^5.3.3",
-        "vite": "^5.1.1",
-        "vitest": "^1.2.2"
+        "typescript": "^5.4.5",
+        "vite": "^5.2.10",
+        "vitest": "^1.5.2"
     },
     "scripts": {
         "dev": "vite --host",
-        "build": "tsc -p tsconfig.prod.json",
+        "build:package": "tsc -p tsconfig.prod.json",
         "build:docs": "typedoc",
+        "build": "npm run build:package && npm run build:docs",
         "test": "vitest",
         "lint": "eslint ./src",
         "lint:fix": "eslint ./src --fix"
@@ -37,6 +38,6 @@
         "dist"
     ],
     "dependencies": {
-        "i18next": "^23.8.2"
+        "i18next": "^23.11.2"
     }
 }
