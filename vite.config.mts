@@ -6,9 +6,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     base: '/',
     root: './local/',
-    plugins: [
-        // checker({ typescript: true, eslint: { lintCommand: 'eslint ./src' } }),
-    ],
+    plugins: [],
     server: {
         proxy: {
             '^(/fonts/)': {

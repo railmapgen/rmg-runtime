@@ -32,6 +32,7 @@ fi
 
 ### BUILD
 CI='' npm run build
+npm run build:docs
 
 ### PUSH TAG AND COMMIT
 if [ "$BRANCH" = "main" ]

@@ -39,3 +39,14 @@ jobs:
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.RMG_NPM_PUBLISH }}
+
+      - name: Release
+        if: ${{ inputs.auto_deploy == 'UAT' || inputs.auto_deploy == 'PRD' }}
+        uses: railmapgen/releaser@main
+        with:
+          app_name: rmg-translate
+          version: ${{ steps.build.outputs.RMG_VER }}
+          environment: ${{ inputs.auto_deploy }}
+          dist: docs
+          github_token: ${{ secrets.RMG_BUILD_AND_RELEASE }}
+          gitlab_token: ${{ secrets.GITLAB_RELEASE }}
