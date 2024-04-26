@@ -43,7 +43,7 @@ jobs:
       - name: Release
         uses: railmapgen/releaser@main
         with:
-          app_name: rmg-translate
+          app_name: rmg-runtime
           version: ${{ steps.build.outputs.RMG_VER }}
           environment: PRD
           dist: docs
