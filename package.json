@@ -29,7 +29,7 @@
         "lint": "eslint ./src",
         "lint:fix": "eslint ./src --fix"
     },
-    "version": "9.1.7",
+    "version": "10.0.0",
     "main": "./dist/index.js",
     "exports": {
         ".": "./dist/index.js"
