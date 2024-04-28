@@ -47,8 +47,13 @@ const injectUITools = () => {
     }
 };
 
-const openApp = (appId: string, url?: string) => {
-    channel.postEvent(OPEN_APP, { appId, url });
+type OpenAppPayload = {
+    appId: string;
+    search?: string;
+    hash?: string;
+};
+const openApp = (payload: OpenAppPayload) => {
+    channel.postEvent(OPEN_APP, payload);
 };
 
 const closeApp = (appId: string) => {
@@ -59,7 +64,7 @@ const updateUrl = (url: string) => {
     channel.postEvent(UPDATE_URL, url);
 };
 
-const onAppOpen = (callback: ChannelEventHandler<string | { appId: string; url: string }>) => {
+const onAppOpen = (callback: ChannelEventHandler<OpenAppPayload>) => {
     channel.onMessage(OPEN_APP, callback);
 };
 
