@@ -17,6 +17,8 @@ try {
 const postEvent = (event: string, data: any, log?: boolean) => {
     if (log) {
         console.log(`[runtime] Broadcasting event ${event} with data`, data);
+    } else {
+        console.debug(`[runtime] Broadcasting event ${event} with data`, data);
     }
     channel?.postMessage({ event, data, frameId: window.frameElement?.id });
 };

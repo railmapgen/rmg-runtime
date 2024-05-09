@@ -4,6 +4,7 @@ import { ChannelEventHandler } from '../util/types';
 const TOGGLE_NAV_MENU = 'TOGGLE_NAV_MENU';
 const OPEN_APP = 'OPEN_APP';
 const CLOSE_APP = 'CLOSE_APP';
+const UPDATE_APP_METADATA = 'UPDATE_APP_METADATA';
 const UPDATE_URL = 'UPDATE_URL';
 
 const isStandaloneWindow = () => {
@@ -60,6 +61,16 @@ const closeApp = (appId: string) => {
     channel.postEvent(CLOSE_APP, appId);
 };
 
+type UpdateAppMetadataPayload = {
+    title?: string;
+    search?: string;
+    hash?: string;
+};
+
+const updateAppMetadata = (payload: UpdateAppMetadataPayload) => {
+    channel.postEvent(UPDATE_APP_METADATA, payload);
+};
+
 const updateUrl = (url: string) => {
     channel.postEvent(UPDATE_URL, url);
 };
@@ -70,6 +81,10 @@ const onAppOpen = (callback: ChannelEventHandler<OpenAppPayload>) => {
 
 const onAppClose = (callback: ChannelEventHandler<string>) => {
     channel.onMessage(CLOSE_APP, callback);
+};
+
+const onAppMetadataUpdate = (callback: ChannelEventHandler<UpdateAppMetadataPayload>) => {
+    channel.onMessage(UPDATE_APP_METADATA, callback);
 };
 
 const onUrlUpdate = (callback: ChannelEventHandler<string>) => {
@@ -87,6 +102,8 @@ export default {
     onAppOpen,
     closeApp,
     onAppClose,
+    updateAppMetadata,
+    onAppMetadataUpdate,
     updateUrl,
     onUrlUpdate,
     toggleNavMenu,

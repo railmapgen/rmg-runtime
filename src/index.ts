@@ -64,6 +64,8 @@ const rmgRuntime = {
     onAppOpen: frame.onAppOpen,
     closeApp: frame.closeApp,
     onAppClose: frame.onAppClose,
+    updateAppMetadata: frame.updateAppMetadata,
+    onAppMetadataUpdate: frame.onAppMetadataUpdate,
     updateUrl: frame.updateUrl,
     onUrlUpdate: frame.onUrlUpdate,
     toggleNavMenu: frame.toggleNavMenu,
