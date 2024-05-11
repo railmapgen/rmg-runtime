@@ -22,13 +22,13 @@ const init = async () => {
     if (settings.isAnalyticsQADone()) {
         if (settings.isAllowAnalytics()) {
             // init GA if user previously opt-in
-            logger.info('User has previously allowed GA');
+            fancyLogger.info('User has previously allowed GA');
             eventLogger.init();
         }
     } else {
         if (frame.isStandaloneWindow() && !config.isRMT()) {
             // init GA if QA not done but open in standalone window
-            logger.warn(
+            fancyLogger.warn(
                 'App is opened in standalone window but analytics Q&A is not finished. GA will be init by default.'
             );
             eventLogger.init();
