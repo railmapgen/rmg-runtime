@@ -1,5 +1,6 @@
 import i18n, { i18n as II18n, Module, Newable, NewableModule, Resource } from 'i18next';
 import settings from './settings';
+import logger from './logger';
 
 let i18nInstance: II18n;
 
@@ -81,7 +82,7 @@ export class I18nBuilder {
             },
             (err, t) => {
                 if (err) {
-                    console.error('[runtime] unexpected error occurs while initialising i18n', err);
+                    logger.error('unexpected error occurs while initialising i18n', err);
                     return;
                 }
                 document.title = t(this._appName);

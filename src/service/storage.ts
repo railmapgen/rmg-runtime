@@ -1,5 +1,6 @@
 import config from './config';
 import { UNKNOWN_COMPONENT } from '../util/constant';
+import logger from './logger';
 
 type StorageEventHandler = (value: string | null) => void;
 const eventListeners: Partial<Record<string, StorageEventHandler[]>> = {};
@@ -7,7 +8,7 @@ const eventListeners: Partial<Record<string, StorageEventHandler[]>> = {};
 const getPrefix = (): string => {
     const component = config.getComponent();
     if (component === UNKNOWN_COMPONENT) {
-        throw new Error('[runtime] Unable to clear storage for unknown app');
+        throw new Error('Unable to clear storage for unknown app');
     }
     return component;
 };
@@ -68,7 +69,7 @@ const clear = () => {
         const key = window.localStorage.key(count);
         if (key?.startsWith(prefix + '__')) {
             window.localStorage.removeItem(key);
-            console.log(`[runtime] Removed item ${key}`);
+            logger.info(`Removed item ${key}`);
         } else {
             count++;
         }

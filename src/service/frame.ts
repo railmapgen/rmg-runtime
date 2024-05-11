@@ -1,5 +1,6 @@
 import channel from './channel';
 import { ChannelEventHandler } from '../util/types';
+import logger from './logger';
 
 const TOGGLE_NAV_MENU = 'TOGGLE_NAV_MENU';
 const OPEN_APP = 'OPEN_APP';
@@ -39,7 +40,7 @@ const injectUITools = () => {
                 try {
                     document.head.removeChild(indentHeader);
                 } catch (e) {
-                    console.warn('[runtime] Unable to remove indent style from RmgWindowHeader', e);
+                    logger.warn('Unable to remove indent style from RmgWindowHeader', e);
                 }
             } else {
                 document.head.appendChild(indentHeader);
@@ -92,7 +93,7 @@ const onUrlUpdate = (callback: ChannelEventHandler<string>) => {
 };
 
 const toggleNavMenu = (isOpen: boolean) => {
-    channel.postEvent(TOGGLE_NAV_MENU, isOpen, true);
+    channel.postEvent(TOGGLE_NAV_MENU, isOpen);
 };
 
 export default {

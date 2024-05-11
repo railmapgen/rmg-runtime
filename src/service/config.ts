@@ -2,6 +2,7 @@ import { RmgRuntimeInfoConfig } from '../util/types';
 import { waitFor } from '../util/util';
 import { RmgEnv, RmgInstance } from '../util/rmg-types';
 import { RMT_ALIAS, RMT_COMPONENT_NAME, UNKNOWN_COMPONENT } from '../util/constant';
+import logger from './logger';
 
 let initialised: boolean;
 let component: string;
@@ -23,6 +24,7 @@ const fetchInfoJson = async () => {
     const res = await fetch(url);
     if (res.ok) {
         const info = (await res.json()) as RmgRuntimeInfoConfig;
+        logger.info('Received info.json', info);
 
         component = info.component;
         version = info.version;
@@ -35,16 +37,18 @@ const fetchInfoJson = async () => {
 
 const loadWithTimeout = async () => {
     try {
-        console.log('[runtime] Loading config...');
+        logger.group('Loading config...');
         const result = await Promise.race([fetchInfoJson(), waitFor(10 * 1000)]);
         if (!result) {
             initialised = true;
-            console.log('[runtime] Config loaded!');
+            logger.info('✅ Config loaded!');
         } else {
-            console.error('[runtime] Failed to load config.', result);
+            logger.error('❌ Failed to load config.', result);
         }
     } catch (e) {
-        console.error('[runtime] Failed to load config.', e);
+        logger.error('❌ Failed to load config.', e);
+    } finally {
+        logger.groupEnd();
     }
 };
 

@@ -1,4 +1,5 @@
 import { ChannelEventHandler } from '../util/types';
+import logger from './logger';
 
 export const RMG_RUNTIME_CHANNEL_NAME = 'rmg-runtime-channel';
 const eventListeners: Partial<Record<string, ChannelEventHandler<any>[]>> = {};
@@ -11,15 +12,11 @@ try {
         eventListeners[event]?.forEach(cb => cb(data, frameId));
     };
 } catch (e) {
-    console.warn('[runtime] Failed to initiate broadcast channel. Some features may be unavailable.', e);
+    logger.warn('Failed to initiate broadcast channel. Some features may be unavailable.', e);
 }
 
-const postEvent = (event: string, data: any, log?: boolean) => {
-    if (log) {
-        console.log(`[runtime] Broadcasting event ${event} with data`, data);
-    } else {
-        console.debug(`[runtime] Broadcasting event ${event} with data`, data);
-    }
+const postEvent = (event: string, data: any) => {
+    logger.debug(`Broadcasting event ${event} with data`, data);
     channel?.postMessage({ event, data, frameId: window.frameElement?.id });
 };
 

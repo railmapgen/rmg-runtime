@@ -1,5 +1,6 @@
 import config from './config';
 import { RmgEnv } from '../util/rmg-types';
+import logger from './logger';
 
 (window as any).dataLayer = (window as any).dataLayer || [];
 
@@ -15,7 +16,7 @@ function gtag(...args: any) {
         // eslint-disable-next-line prefer-rest-params
         return (window as any).dataLayer.push(arguments);
     } else {
-        console.log('[runtime] Not going to send event in DEV environment', args);
+        logger.info('Not going to send event in DEV environment', args);
     }
 }
 

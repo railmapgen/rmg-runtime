@@ -1,6 +1,7 @@
 import { createCachedPromise, readBlobAsDataURL } from '../util/util';
 import channel from './channel';
 import { ChannelEventHandler } from '../util/types';
+import logger from './logger';
 
 type FontFaceConfig = {
     source: string;
@@ -29,7 +30,7 @@ export const _resetLoadedFonts = () => (loadedFonts = {});
 // broadcast
 const LOAD_REMOTE_FONT = 'LOAD_REMOTE_FONT';
 const broadcastRemoteFontLoaded = (family: string, definition: FontFaceDefinition) => {
-    channel.postEvent(LOAD_REMOTE_FONT, { family, definition }, true);
+    channel.postEvent(LOAD_REMOTE_FONT, { family, definition });
 };
 const onRemoteFontLoaded = (callback: ChannelEventHandler<{ family: string; definition: FontFaceDefinition }>) => {
     channel.onMessage(LOAD_REMOTE_FONT, callback);
@@ -76,7 +77,7 @@ const loadSingleFontFace = async (
         loadedFonts[family] = { configs: [{ ...config, font }] };
         return true;
     } catch (e) {
-        console.warn(`[runtime] Failed to load font ${family} with source ${config.source}`, e);
+        logger.warn(`Failed to load font ${family} with source ${config.source}`, e);
         return false;
     }
 };
@@ -87,7 +88,7 @@ const loadMultipleFontFaces = async (
     onRemoteLoaded?: () => void
 ): Promise<boolean> => {
     if (configs.some(isLocalFont)) {
-        console.error(`[runtime] Unable to load multiple FontFace for the same family ${family}`);
+        logger.error(`Unable to load multiple FontFace for the same family ${family}`);
         return false;
     }
     const fonts: LoadedFont['configs'] = [];
@@ -148,9 +149,7 @@ const getFontCSS = async (family: string) => {
             .filter(font => {
                 const isLoaded = font.font.status === 'loaded';
                 if (!isLoaded) {
-                    console.warn(
-                        `[runtime] Font family ${family} is not loaded completely. Some FontFaceRules may be missing`
-                    );
+                    logger.warn(`Font family ${family} is not loaded completely. Some FontFaceRules may be missing`);
                 }
                 return isLoaded;
             })

@@ -8,11 +8,13 @@ import storage from './service/storage';
 import * as i18n from './service/i18n';
 import fonts from './service/fonts';
 import searchEngine from './service/search-engine';
+import fancyLogger from './service/logger';
 import { waitFor } from './util/util';
 
 let initialised = false;
 const init = async () => {
     await config.loadWithTimeout();
+    fancyLogger.setup(config.getComponent());
 
     searchEngine.injectNoindexRule();
 
@@ -20,14 +22,14 @@ const init = async () => {
     if (settings.isAnalyticsQADone()) {
         if (settings.isAllowAnalytics()) {
             // init GA if user previously opt-in
-            console.log('[runtime] User has previously allowed GA');
+            logger.info('User has previously allowed GA');
             eventLogger.init();
         }
     } else {
         if (frame.isStandaloneWindow() && !config.isRMT()) {
             // init GA if QA not done but open in standalone window
-            console.warn(
-                '[runtime] App is opened in standalone window but analytics Q&A is not finished. GA will be init by default.'
+            logger.warn(
+                'App is opened in standalone window but analytics Q&A is not finished. GA will be init by default.'
             );
             eventLogger.init();
         }
@@ -112,5 +114,7 @@ const rmgRuntime = {
 
 init().then();
 (window as any).rmgRuntime = rmgRuntime;
+
+export const logger = fancyLogger.logger;
 export * from './util/rmg-types';
 export default rmgRuntime;

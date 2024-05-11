@@ -1,4 +1,4 @@
-import rmgRuntime from '../../src';
+import rmgRuntime, { logger } from '../../src';
 
 const $ = document.querySelector.bind(document);
 
@@ -16,7 +16,7 @@ rmgRuntime.ready().then(async () => {
     $('#frame').innerHTML += 'isStandaloneWindow: ' + rmgRuntime.isStandaloneWindow();
     rmgRuntime.injectUITools();
 
-    rmgRuntime.onLanguageChange(data => console.log('Changing language to', data));
+    rmgRuntime.onLanguageChange(data => logger.info('Changing language to', data));
 
     await waitFor(1000);
     rmgRuntime.updateUrl('/rmg?project=123');
