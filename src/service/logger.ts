@@ -1,41 +1,46 @@
+// DO NOT IMPORT config.ts
 import { hashCode, intToRGB } from '../util/util';
 import { UNKNOWN_COMPONENT } from '../util/constant';
 
-let componentPrefix = `[${UNKNOWN_COMPONENT}]`;
+let componentName = UNKNOWN_COMPONENT;
 let componentRGB: string = intToRGB(hashCode(UNKNOWN_COMPONENT));
 
 const setup = (component: string) => {
-    componentPrefix = `[${component}]`;
+    componentName = component;
     componentRGB = intToRGB(hashCode(component));
 };
 
+const getComponentPrefix = () => `[${componentName}]`;
+const getComponentRGB = () => componentRGB;
+
 const wrapper =
-    (cb: (...data: any[]) => void, prefix?: string, RGB?: string) =>
+    (cb: (...data: any[]) => void, prefix: () => string, RGB: () => string) =>
     (...data: any[]) => {
         if (typeof data[0] === 'string') {
-            cb(`%c${prefix ?? componentPrefix}%c ${data[0]}`, `color: ${RGB ?? componentRGB}`, '', ...data.slice(1));
+            cb(`%c${prefix()}%c ${data[0]}`, `color: ${RGB()}`, '', ...data.slice(1));
         } else {
-            cb(`%c${prefix ?? componentPrefix}%c`, `color: ${RGB ?? componentRGB}`, '', ...data);
+            cb(`%c${prefix()}%c`, `color: ${RGB()}`, '', ...data);
         }
     };
 
 const logger = {
-    debug: wrapper(console.debug),
-    info: wrapper(console.info),
-    warn: wrapper(console.warn),
-    error: wrapper(console.error),
+    debug: wrapper(console.debug, getComponentPrefix, getComponentRGB),
+    info: wrapper(console.info, getComponentPrefix, getComponentRGB),
+    warn: wrapper(console.warn, getComponentPrefix, getComponentRGB),
+    error: wrapper(console.error, getComponentPrefix, getComponentRGB),
 };
 
-const runtimePrefix = '[runtime]';
+const getRuntimePrefix = () => (componentName === UNKNOWN_COMPONENT ? `[runtime]` : `[runtime@${componentName}]`);
 const runtimeRGB = intToRGB(hashCode('runtime'));
+const getRuntimeRGB = () => runtimeRGB;
 
 export default {
     setup,
     logger,
-    debug: wrapper(console.debug, runtimePrefix, runtimeRGB),
-    info: wrapper(console.info, runtimePrefix, runtimeRGB),
-    warn: wrapper(console.warn, runtimePrefix, runtimeRGB),
-    error: wrapper(console.error, runtimePrefix, runtimeRGB),
-    group: wrapper(console.group, runtimePrefix, runtimeRGB),
+    debug: wrapper(console.debug, getRuntimePrefix, getRuntimeRGB),
+    info: wrapper(console.info, getRuntimePrefix, getRuntimeRGB),
+    warn: wrapper(console.warn, getRuntimePrefix, getRuntimeRGB),
+    error: wrapper(console.error, getRuntimePrefix, getRuntimeRGB),
+    group: wrapper(console.group, getRuntimePrefix, getRuntimeRGB),
     groupEnd: console.groupEnd,
 };
