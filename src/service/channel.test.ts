@@ -16,7 +16,7 @@ describe('Channel', () => {
     });
 
     it('Can emit event as expected', async () => {
-        channel.postEvent('SET_LANGUAGE', 'en', true);
+        channel.postEvent('SET_LANGUAGE', 'en');
 
         await waitFor(() => expect(testChannelReceives).toHaveLength(1));
         expect(testChannelReceives).toContainEqual({ event: 'SET_LANGUAGE', data: 'en' });

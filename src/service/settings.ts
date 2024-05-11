@@ -28,7 +28,7 @@ type ColourMode = (typeof colourModes)[number];
 
 const setColourMode = (value: ColourMode) => {
     if (colourModes.includes(value)) {
-        channel.postEvent(SET_COLOUR_MODE, value, true);
+        channel.postEvent(SET_COLOUR_MODE, value);
         window.localStorage.setItem(RMG_RUNTIME_COLOUR_MODE_KEY, value);
     }
 };
