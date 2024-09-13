@@ -6,7 +6,7 @@ const originalFetch = global.fetch;
 
 describe('Fonts', () => {
     let testChannel: BroadcastChannel;
-    let testChannelReceives: any[] = [];
+    let testChannelReceives: unknown[] = [];
 
     beforeEach(() => {
         testChannel = new BroadcastChannel(RMG_RUNTIME_CHANNEL_NAME);

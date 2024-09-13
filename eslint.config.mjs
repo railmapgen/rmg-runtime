@@ -9,15 +9,13 @@ export default tseslint.config(
     {
         files: ['**/*.{js,ts}'],
         extends: [...tseslint.configs.recommended],
-        rules: {
-            '@typescript-eslint/no-explicit-any': 'off',
-        },
+        rules: {},
     },
     {
         plugins: { prettier },
         rules: {
             'prettier/prettier': [
-                'warn',
+                'error',
                 {
                     endOfLine: 'auto',
                 },

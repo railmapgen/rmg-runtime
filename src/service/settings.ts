@@ -33,9 +33,13 @@ const setColourMode = (value: ColourMode) => {
     }
 };
 
-const getColourMode = (): (typeof colourModes)[number] => {
-    const colourModeFromStorage = window.localStorage.getItem(RMG_RUNTIME_COLOUR_MODE_KEY) as any;
-    return colourModeFromStorage && colourModes.includes(colourModeFromStorage) ? colourModeFromStorage : 'system';
+const isColourMode = (value: string | null): value is ColourMode => {
+    return Boolean(value && (colourModes as readonly string[]).includes(value));
+};
+
+const getColourMode = (): ColourMode => {
+    const colourModeFromStorage = window.localStorage.getItem(RMG_RUNTIME_COLOUR_MODE_KEY);
+    return isColourMode(colourModeFromStorage) ? colourModeFromStorage : 'system';
 };
 
 const onColourModeChange = (callback: ChannelEventHandler<ColourMode>) => {

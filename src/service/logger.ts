@@ -14,8 +14,8 @@ const getComponentPrefix = () => `[${componentName}]`;
 const getComponentRGB = () => componentRGB;
 
 const wrapper =
-    (cb: (...data: any[]) => void, prefix: () => string, RGB: () => string) =>
-    (...data: any[]) => {
+    (cb: (...data: unknown[]) => void, prefix: () => string, RGB: () => string) =>
+    (...data: unknown[]) => {
         if (typeof data[0] === 'string') {
             cb(`%c${prefix()}%c ${data[0]}`, `color: ${RGB()}`, '', ...data.slice(1));
         } else {

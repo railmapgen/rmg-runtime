@@ -3,7 +3,7 @@ import { waitFor } from '@testing-library/dom';
 
 describe('Channel', () => {
     let testChannel: BroadcastChannel;
-    let testChannelReceives: any[] = [];
+    let testChannelReceives: unknown[] = [];
 
     beforeEach(() => {
         testChannel = new BroadcastChannel(RMG_RUNTIME_CHANNEL_NAME);
@@ -23,7 +23,7 @@ describe('Channel', () => {
     });
 
     it('Can receive registered event as expected', async () => {
-        const channelReceives: any[] = [];
+        const channelReceives: unknown[] = [];
         channel.onMessage('SET_LANGUAGE', data => channelReceives.push(data));
 
         testChannel.postMessage({ event: 'SET_LANGUAGE', data: 'en' });

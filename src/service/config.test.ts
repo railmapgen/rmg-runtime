@@ -15,7 +15,7 @@ describe('Config', () => {
     });
 
     it('Can resolve correct config path - not slash', async () => {
-        windowSpy.mockReturnValue({ pathname: '/rmg-runtime/my-route' } as any);
+        windowSpy.mockReturnValue({ pathname: '/rmg-runtime/my-route' } as Location);
         await config.loadWithTimeout();
 
         expect(config.isInitialised()).toBeTruthy();
@@ -24,7 +24,7 @@ describe('Config', () => {
     });
 
     it('Can resolve correct config path - slash', async () => {
-        windowSpy.mockReturnValue({ pathname: '/' } as any);
+        windowSpy.mockReturnValue({ pathname: '/' } as Location);
         await config.loadWithTimeout();
 
         expect(config.isInitialised()).toBeTruthy();

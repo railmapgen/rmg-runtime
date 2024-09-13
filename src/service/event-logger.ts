@@ -2,7 +2,12 @@ import config from './config';
 import { RmgEnv } from '../util/rmg-types';
 import logger from './logger';
 
-(window as any).dataLayer = (window as any).dataLayer || [];
+declare global {
+    interface Window {
+        dataLayer: unknown[];
+    }
+}
+window.dataLayer = window.dataLayer || [];
 
 const installGtag = () => {
     const script = document.createElement('script');
@@ -11,16 +16,16 @@ const installGtag = () => {
     document.head.append(script);
 };
 
-function gtag(...args: any) {
+function gtag(...args: unknown[]) {
     if (config.getEnvironment() !== RmgEnv.DEV) {
         // eslint-disable-next-line prefer-rest-params
-        return (window as any).dataLayer.push(arguments);
+        return window.dataLayer.push(arguments);
     } else {
         logger.info('Not going to send event in DEV environment', args);
     }
 }
 
-const customEvent = (type: string, data: Record<string, any> = {}) => {
+const customEvent = (type: string, data: Record<string, never> = {}) => {
     gtag('event', type, data);
 };
 

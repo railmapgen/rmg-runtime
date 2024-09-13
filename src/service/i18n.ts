@@ -10,6 +10,8 @@ const registerLanguageChangeListener = (instance: II18n) => {
     settings.onLanguageChange(language => instance.changeLanguage(language));
 };
 
+type ResourceNode = string | { [key: string]: ResourceNode };
+
 export class I18nBuilder {
     _appName = 'RMG';
     _lng: string | undefined = undefined;
@@ -35,20 +37,20 @@ export class I18nBuilder {
         return this;
     }
 
-    withDefaultResource(resource: Record<string, Record<string, any>>): I18nBuilder {
+    withDefaultResource(resource: Record<string, Record<string, ResourceNode>>): I18nBuilder {
         Object.entries(resource).forEach(([lang, r]) => {
             this._defaultResources[lang] = r;
         });
         return this;
     }
 
-    withResource(lang: string, additionalResource: Record<string, any>): I18nBuilder {
+    withResource(lang: string, additionalResource: Record<string, ResourceNode>): I18nBuilder {
         this._resources[lang] = additionalResource;
         return this;
     }
 
     combineResource(): Resource {
-        const result: Record<string, { translation: Record<string, any> }> = {};
+        const result: Record<string, { translation: Record<string, ResourceNode> }> = {};
         Object.entries(this._defaultResources).forEach(([lang, translation]) => {
             result[lang] = { translation };
         });

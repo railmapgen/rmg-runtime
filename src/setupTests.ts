@@ -3,14 +3,14 @@ global.fetch = vi.fn().mockImplementation(() => {
         ok: true,
         status: 200,
         json: () => Promise.resolve({}),
-    }) as any;
+    });
 });
 
 class MockFontFace {
     family: string;
 
     loadingResolver?: (value: MockFontFace) => void = undefined;
-    loadingRejecter?: (reason?: any) => void = undefined;
+    loadingRejecter?: (reason?: string) => void = undefined;
     loadingPromise: Promise<MockFontFace>;
 
     status = 'unloaded';

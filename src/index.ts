@@ -119,7 +119,13 @@ const rmgRuntime = {
 };
 
 init().then();
-(window as any).rmgRuntime = rmgRuntime;
+
+declare global {
+    interface Window {
+        rmgRuntime: typeof rmgRuntime;
+    }
+}
+window.rmgRuntime = rmgRuntime;
 
 export const logger = fancyLogger.logger;
 export * from './util/rmg-types';
