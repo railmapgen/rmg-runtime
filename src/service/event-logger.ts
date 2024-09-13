@@ -25,7 +25,8 @@ function gtag(...args: unknown[]) {
     }
 }
 
-const customEvent = (type: string, data: Record<string, never> = {}) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const customEvent = (type: string, data: Record<string, any> = {}) => {
     gtag('event', type, data);
 };
 
