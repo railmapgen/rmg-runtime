@@ -19,6 +19,6 @@ rmgRuntime.ready().then(async () => {
     rmgRuntime.onLanguageChange(data => logger.info('Changing language to', data));
 
     await waitFor(1000);
-    rmgRuntime.updateUrl('/rmg?project=123');
+    rmgRuntime.updateAppMetadata({ search: '?project=123' });
     rmgRuntime.openApp('rmg');
 });

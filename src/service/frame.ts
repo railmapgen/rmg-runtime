@@ -6,7 +6,6 @@ const TOGGLE_NAV_MENU = 'TOGGLE_NAV_MENU';
 const OPEN_APP = 'OPEN_APP';
 const CLOSE_APP = 'CLOSE_APP';
 const UPDATE_APP_METADATA = 'UPDATE_APP_METADATA';
-const UPDATE_URL = 'UPDATE_URL';
 
 const isStandaloneWindow = () => {
     return !window.frameElement;
@@ -73,10 +72,6 @@ const updateAppMetadata = (payload: UpdateAppMetadataPayload) => {
     channel.postEvent(UPDATE_APP_METADATA, payload);
 };
 
-const updateUrl = (url: string) => {
-    channel.postEvent(UPDATE_URL, url);
-};
-
 const onAppOpen = (callback: ChannelEventHandler<OpenAppPayload>) => {
     channel.onMessage(OPEN_APP, callback);
 };
@@ -87,10 +82,6 @@ const onAppClose = (callback: ChannelEventHandler<string>) => {
 
 const onAppMetadataUpdate = (callback: ChannelEventHandler<UpdateAppMetadataPayload>) => {
     channel.onMessage(UPDATE_APP_METADATA, callback);
-};
-
-const onUrlUpdate = (callback: ChannelEventHandler<string>) => {
-    channel.onMessage(UPDATE_URL, callback);
 };
 
 const toggleNavMenu = (isOpen: boolean) => {
@@ -106,7 +97,5 @@ export default {
     onAppClose,
     updateAppMetadata,
     onAppMetadataUpdate,
-    updateUrl,
-    onUrlUpdate,
     toggleNavMenu,
 };

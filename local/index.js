@@ -23,7 +23,9 @@ const start = async () => {
     $('#hide-nav').addEventListener('click', () => rmgRuntime.toggleNavMenu(false));
 
     // channel testing
-    rmgRuntime.onUrlUpdate((data, frameId) => logger.info(`Url updated to ${data} from ${frameId}`));
+    rmgRuntime.onAppMetadataUpdate((data, frameId) =>
+        logger.info(`Metadata updated to ${JSON.stringify(data)} from ${frameId}`)
+    );
     rmgRuntime.onAppOpen(data => logger.info('Opening app', data));
 
     await waitFor(1000);
