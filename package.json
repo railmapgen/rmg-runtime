@@ -38,6 +38,9 @@
     "exports": {
         ".": {
             "import": "./dist/index.mjs"
+        },
+        "./util": {
+            "import": "./dist/util/index.mjs"
         }
     },
     "files": [

@@ -1,5 +1,5 @@
 import config from './config';
-import { waitFor } from '../util/util';
+import { waitForMs } from '../util/util';
 
 const originalFetch = global.fetch;
 const mockFetch = vi.fn();
@@ -43,7 +43,7 @@ describe('Config', () => {
     it('Can timeout after 10 seconds', () => {
         // fetch takes more than 10 seconds
         global.fetch = mockFetch.mockImplementation(async () => {
-            await waitFor(11 * 1000);
+            await waitForMs(11 * 1000);
         });
 
         vi.useFakeTimers();

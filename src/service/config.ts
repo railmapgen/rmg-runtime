@@ -1,5 +1,5 @@
 import { RmgRuntimeInfoConfig } from '../util/types';
-import { waitFor } from '../util/util';
+import { waitForMs } from '../util/util';
 import { RmgEnv, RmgInstance } from '../util/rmg-types';
 import { RMT_ALIAS, RMT_COMPONENT_NAME, UNKNOWN_COMPONENT } from '../util/constant';
 import logger from './logger';
@@ -38,7 +38,7 @@ const fetchInfoJson = async () => {
 const loadWithTimeout = async () => {
     try {
         logger.group('Loading config...');
-        const result = await Promise.race([fetchInfoJson(), waitFor(10 * 1000)]);
+        const result = await Promise.race([fetchInfoJson(), waitForMs(10 * 1000)]);
         if (!result) {
             initialised = true;
             logger.info('✅ Config loaded!');

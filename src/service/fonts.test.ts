@@ -31,11 +31,11 @@ describe('Fonts', () => {
         expect(result?.configs).toHaveLength(1);
     });
 
-    it('Can throw error if requested font is not found in config', () => {
+    it('Can throw error if requested font is not found in config', async () => {
         global.fetch = vi.fn().mockResolvedValue({
             json: () => Promise.resolve({}),
         });
-        expect(async () => await fonts.loadFont('Arial')).rejects.toThrow();
+        await expect(async () => await fonts.loadFont('Arial')).rejects.toThrow();
     });
 
     it('Can load local font immediately', async () => {

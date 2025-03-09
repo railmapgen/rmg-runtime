@@ -9,7 +9,7 @@ import * as i18n from './service/i18n';
 import fonts from './service/fonts';
 import searchEngine from './service/search-engine';
 import fancyLogger from './service/logger';
-import { waitFor } from './util/util';
+import { waitForMs } from './util/util';
 
 let initialised = false;
 const init = async () => {
@@ -41,7 +41,7 @@ const init = async () => {
 const ready = async () => {
     let elapsedSeconds = 0;
     while (elapsedSeconds <= 10 && !initialised) {
-        await waitFor(1000);
+        await waitForMs(1000);
         elapsedSeconds += 1;
     }
 };

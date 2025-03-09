@@ -1,4 +1,4 @@
-export const waitFor = (ms: number) => {
+export const waitForMs = (ms: number) => {
     return new Promise(resolve => {
         setTimeout(resolve, ms, `Timeout after ${ms / 1000} seconds`);
     });
