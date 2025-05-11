@@ -28,6 +28,8 @@ const start = async () => {
     );
     rmgRuntime.onAppOpen(data => logger.info('Opening app', data));
 
+    rmgRuntime.onNewNotification(data => logger.info('New notification received', data));
+
     await waitFor(1000);
     rmgRuntime.setLanguage('en');
 

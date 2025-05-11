@@ -9,7 +9,8 @@ import * as i18n from './service/i18n';
 import fonts from './service/fonts';
 import searchEngine from './service/search-engine';
 import fancyLogger from './service/logger';
-import { waitForMs } from './util/util';
+import notifications from './service/notifications';
+import { waitForMs } from './util';
 
 let initialised = false;
 const init = async () => {
@@ -108,6 +109,10 @@ const rmgRuntime = {
     loadFont: fonts.loadFont,
     getFontCSS: fonts.getFontCSS,
     onRemoteFontLoaded: fonts.onRemoteFontLoaded,
+
+    // notifications
+    sendNotification: notifications.sendNotification,
+    onNewNotification: notifications.onNewNotification,
 };
 
 init().then();

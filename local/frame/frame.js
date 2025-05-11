@@ -13,8 +13,17 @@ rmgRuntime.ready().then(async () => {
         return;
     }
 
-    $('#frame').innerHTML += 'isStandaloneWindow: ' + rmgRuntime.isStandaloneWindow();
+    $('#frame').innerHTML += `<div>isStandaloneWindow: ${rmgRuntime.isStandaloneWindow()}</div>`;
     rmgRuntime.injectUITools();
+
+    $('#notification').addEventListener('click', () => {
+        rmgRuntime.sendNotification({
+            title: 'Warning',
+            message: 'Your device is hacked!',
+            type: 'warning',
+            duration: 5000,
+        });
+    });
 
     rmgRuntime.onLanguageChange(data => logger.info('Changing language to', data));
 
