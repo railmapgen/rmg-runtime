@@ -1,10 +1,10 @@
-import channel from './channel';
-import { ChannelEventHandler } from '../util/types';
 import {
     RMG_RUNTIME_ALLOW_ANALYTICS_KEY,
     RMG_RUNTIME_COLOUR_MODE_KEY,
     RMG_RUNTIME_LANGUAGE_KEY,
 } from '../util/constant';
+import { ChannelEventHandler } from '../util/types';
+import channel from './channel';
 import eventLogger from './event-logger';
 
 const SET_LANGUAGE = 'SET_LANGUAGE';
@@ -16,7 +16,7 @@ const setLanguage = (value: string) => {
 };
 
 const getLanguage = () => {
-    return window.localStorage.getItem(RMG_RUNTIME_LANGUAGE_KEY) || 'en';
+    return window.localStorage.getItem(RMG_RUNTIME_LANGUAGE_KEY) || 'zh-Hans';
 };
 
 const onLanguageChange = (callback: ChannelEventHandler<string>) => {
