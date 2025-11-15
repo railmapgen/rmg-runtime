@@ -33,7 +33,7 @@
         "lint": "eslint ./src",
         "lint:fix": "eslint ./src --fix"
     },
-    "version": "12.0.3",
+    "version": "12.0.4",
     "main": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
     "exports": {
