@@ -1,7 +1,3 @@
-import { setupBroadcastChannelMock } from './util';
-
-setupBroadcastChannelMock();
-
 global.fetch = vi.fn().mockImplementation(() => {
     return Promise.resolve({
         ok: true,
