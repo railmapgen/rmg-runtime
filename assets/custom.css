@@ -6,6 +6,13 @@ header {
     padding-top: env(safe-area-inset-top);
 }
 
+.container-main {
+    min-height: calc(
+            100svh - var(--dim-header-height) - var(--dim-footer-height) - 2 * var(--dim-container-main-margin-y)
+            - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+    );
+}
+
 footer {
-    padding-bottom: calc(env(safe-area-inset-top) + 1rem);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
 }
