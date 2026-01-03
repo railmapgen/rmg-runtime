@@ -1,0 +1,11 @@
+* {
+    box-sizing: border-box;
+}
+
+header {
+    padding-top: env(safe-area-inset-top);
+}
+
+footer {
+    padding-bottom: calc(env(safe-area-inset-top) + 1rem);
+}
