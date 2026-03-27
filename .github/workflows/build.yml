@@ -23,6 +23,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.RMG_BUILD_AND_RELEASE }}
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
