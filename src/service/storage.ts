@@ -8,7 +8,8 @@ const eventListeners: Partial<Record<string, StorageEventHandler[]>> = {};
 const getPrefix = (): string => {
     const component = config.getComponent();
     if (component === UNKNOWN_COMPONENT) {
-        throw new Error('Unable to clear storage for unknown app');
+        logger.warn('Unable to clear storage for unknown app');
+        return `${UNKNOWN_COMPONENT}-${Math.random().toString(36).slice(2)}`;
     }
     return component;
 };
