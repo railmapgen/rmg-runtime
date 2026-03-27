@@ -116,7 +116,7 @@ const loadFont = async (family: string, definition?: FontFaceDefinition): Promis
             parsedDefinition = (await getAllFonts())[family];
         } catch (e) {
             const reason = e instanceof Error ? ' due to ' + e.message : '';
-            throw new Error('Unable to load font definition of ' + family + reason);
+            throw new Error('Unable to load font definition of ' + family + reason, { cause: e });
         }
     }
 
