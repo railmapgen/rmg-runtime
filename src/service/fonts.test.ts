@@ -1,8 +1,16 @@
-import fonts, { _resetLoadedFonts, _resetGetAllFonts } from './fonts';
-import { RMG_RUNTIME_CHANNEL_NAME } from './channel';
-import { waitFor } from '@testing-library/dom';
+import { afterEach, beforeEach, describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import 'global-jsdom/register';
+import fonts, { _resetGetAllFonts, _resetLoadedFonts } from './fonts.ts';
+import { RMG_RUNTIME_CHANNEL_NAME } from './channel.ts';
+import { MockFontFace } from '../setupTests.ts';
 
-const originalFetch = global.fetch;
+globalThis.FontFace = MockFontFace as unknown as typeof FontFace;
+if (!document.fonts) {
+    document.fonts = {
+        add: () => {},
+    };
+}
 
 describe('Fonts', () => {
     let testChannel: BroadcastChannel;
@@ -16,70 +24,69 @@ describe('Fonts', () => {
     afterEach(() => {
         _resetLoadedFonts();
         _resetGetAllFonts();
-        global.fetch = originalFetch;
         testChannel.close();
         testChannelReceives = [];
     });
 
-    it('Can load font list if config is not specified', async () => {
-        global.fetch = vi.fn().mockResolvedValue({
-            json: () => Promise.resolve({ Arial: { configs: [{ source: 'local(Arial)' }] } }),
-        });
+    it('Can load font list if config is not specified', async t => {
+        const mockFetch = t.mock.method(global, 'fetch', async () => ({
+            json: async () => ({ Arial: { configs: [{ source: 'local(Arial)' }] } }),
+        }));
         const result = await fonts.loadFont('Arial');
 
-        expect(fetch).toBeCalledTimes(1);
-        expect(result?.configs).toHaveLength(1);
+        assert.equal(mockFetch.mock.callCount(), 1);
+        assert.equal(result?.configs.length, 1);
     });
 
-    it('Can throw error if requested font is not found in config', async () => {
-        global.fetch = vi.fn().mockResolvedValue({
-            json: () => Promise.resolve({}),
-        });
-        await expect(async () => await fonts.loadFont('Arial')).rejects.toThrow();
+    it('Can throw error if requested font is not found in config', async t => {
+        t.mock.method(global, 'fetch', async () => ({
+            json: async () => ({}),
+        }));
+        await assert.rejects(fonts.loadFont('Arial'));
     });
 
     it('Can load local font immediately', async () => {
         const result = await fonts.loadFont('Arial', {
             configs: [{ source: 'local(Arial)' }],
         });
-        expect(result?.configs).toHaveLength(1);
-        expect(result?.configs[0].font.status).toBe('loaded');
+        assert.equal(result?.configs.length, 1);
+        assert.equal(result?.configs[0].font.status, 'loaded');
     });
 
     it('Remote font is not loaded immediately', async () => {
         const result = await fonts.loadFont('Arial', {
             configs: [{ source: "url('/path/to/font')" }],
         });
-        expect(result?.configs).toHaveLength(1);
-        expect(result?.configs[0].font.status).toBe('unloaded');
+        assert.equal(result?.configs.length, 1);
+        assert.equal(result?.configs[0].font.status, 'unloaded');
     });
 
     it('Can load remote font as fallback if local font is not available', async () => {
         const result = await fonts.loadFont('Remote', {
             configs: [{ source: 'local(Remote)' }, { source: "url('/path/to/font')" }],
         });
-        expect(result?.configs).toHaveLength(1);
-        expect(result?.configs[0].source).toContain('url');
+        assert.equal(result?.configs.length, 1);
+        assert.ok(result?.configs[0].source.includes('url'));
     });
 
     it('Cannot load multiple font faces for same family', async () => {
         const result = await fonts.loadFont('Arial', {
             configs: [[{ source: "url('/path/to/font1')" }, { source: "url('/path/to/font2')" }]],
         });
-        expect(result?.configs).toHaveLength(2);
+        assert.equal(result?.configs.length, 2);
     });
 
     it('Cannot load a mix of local and remote font faces', async () => {
         const result = await fonts.loadFont('Arial', {
             configs: [[{ source: 'local(Arial)' }, { source: "url('/path/to/font')" }]],
         });
-        expect(result?.configs).toBeUndefined();
+        assert.equal(result?.configs, undefined);
     });
 
-    it('Can get CSS stylesheet for loaded fonts', async () => {
-        global.fetch = vi.fn().mockResolvedValue({
-            blob: () => Promise.resolve(new Blob(['MOCKED'], { type: 'font/woff2' })),
-        });
+    it('Can get CSS stylesheet for loaded fonts', async t => {
+        t.mock.method(global, 'fetch', async () => ({
+            blob: async () => new window.Blob(['MOCKED'], { type: 'font/woff2' }),
+        }));
         const result = await fonts.loadFont('GenYoMin', {
             configs: [
                 [
@@ -93,23 +100,26 @@ describe('Fonts', () => {
         await result?.configs[0].font.load();
 
         const css = await fonts.getFontCSS('GenYoMin');
-        expect(css).toBe(`@font-face {
+        assert.equal(
+            css,
+            `@font-face {
     font-family: 'GenYoMin';
     src: url('data:font/woff2;base64,TU9DS0VE');
     unicodeRange: U+4E00-4FFF;
-}`);
+}`
+        );
     });
 
-    it('Can broadcast remote font loaded event', async () => {
+    it('Can broadcast remote font loaded event', async t => {
         const arial = await fonts.loadFont('Arial', { configs: [{ source: 'local(Arial)' }] });
         await Promise.all(arial?.configs.map(config => config.font.load()) ?? []);
         const genyomin = await fonts.loadFont('GenYoMin', { configs: [{ source: "url('/path/to/font')" }] });
         await Promise.all(genyomin?.configs.map(config => config.font.load()) ?? []);
 
-        await waitFor(() => expect(testChannelReceives).toHaveLength(1));
-        expect(testChannelReceives[0]).toEqual({
+        await t.waitFor(() => assert.equal(testChannelReceives.length, 1));
+        assert.partialDeepStrictEqual(testChannelReceives[0], {
             event: 'LOAD_REMOTE_FONT',
-            data: expect.objectContaining({ family: 'GenYoMin' }),
+            data: { family: 'GenYoMin' },
         });
     });
 });

@@ -1,5 +1,5 @@
-import { ChannelEventHandler } from '../util/types';
-import logger from './logger';
+import type { ChannelEventHandler } from '../util/types';
+import logger from './logger.ts';
 
 export const RMG_RUNTIME_CHANNEL_NAME = 'rmg-runtime-channel';
 const eventListeners: Partial<Record<string, ChannelEventHandler<never>[]>> = {};

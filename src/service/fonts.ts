@@ -1,7 +1,7 @@
-import { createCachedPromise, readBlobAsDataURL } from '../util/util';
-import channel from './channel';
-import { ChannelEventHandler } from '../util/types';
-import logger from './logger';
+import { createCachedPromise, readBlobAsDataURL } from '../util/util.ts';
+import channel from './channel.ts';
+import type { ChannelEventHandler } from '../util/types';
+import logger from './logger.ts';
 
 type FontFaceConfig = {
     source: string;

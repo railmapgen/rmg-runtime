@@ -1,8 +1,8 @@
-import { RmgRuntimeInfoConfig } from '../util/types';
-import { waitForMs } from '../util/util';
-import { RmgEnv, RmgInstance } from '../util/rmg-types';
-import { RMT_ALIAS, RMT_COMPONENT_NAME, UNKNOWN_COMPONENT } from '../util/constant';
-import logger from './logger';
+import type { RmgRuntimeInfoConfig } from '../util/types';
+import { waitForMs } from '../util/util.ts';
+import { RmgEnv, type RmgInstance } from '../util/rmg-types.ts';
+import { RMT_ALIAS, RMT_COMPONENT_NAME, UNKNOWN_COMPONENT } from '../util/constant.ts';
+import logger from './logger.ts';
 
 let initialised: boolean;
 let component: string;

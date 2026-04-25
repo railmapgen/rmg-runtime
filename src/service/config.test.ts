@@ -1,57 +1,70 @@
-import config from './config';
-import { waitForMs } from '../util/util';
+import { afterEach, describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import 'global-jsdom/register';
+import config from './config.ts';
+import { waitForMs } from '../util/util.ts';
 
-const originalFetch = global.fetch;
-const mockFetch = vi.fn();
-
-const windowSpy = vi.spyOn(window, 'location', 'get');
+const successFetchResponse = {
+    ok: true,
+    status: 200,
+    json: async () => ({}),
+};
 
 describe('Config', () => {
     afterEach(() => {
         config._resetConfig();
-        global.fetch = originalFetch;
-        vi.clearAllMocks();
-        vi.useRealTimers();
     });
 
-    it('Can resolve correct config path - not slash', async () => {
-        windowSpy.mockReturnValue({ pathname: '/rmg-runtime/my-route' } as Location);
+    it('Can resolve correct config path - not slash', async t => {
+        const mockFetch = t.mock.method(global, 'fetch', async () => successFetchResponse);
+
+        window.history.pushState({}, '', '/rmg-runtime/my-route');
+        assert.equal(window.location.pathname, '/rmg-runtime/my-route');
+
         await config.loadWithTimeout();
 
-        expect(config.isInitialised()).toBeTruthy();
-        expect(global.fetch).toBeCalledTimes(1);
-        expect(global.fetch).toBeCalledWith('/rmg-runtime/info.json');
+        assert.ok(config.isInitialised());
+        assert.equal(mockFetch.mock.callCount(), 1);
+        assert.equal(mockFetch.mock.calls[0].arguments[0], '/rmg-runtime/info.json');
     });
 
-    it('Can resolve correct config path - slash', async () => {
-        windowSpy.mockReturnValue({ pathname: '/' } as Location);
+    it('Can resolve correct config path - slash', async t => {
+        const mockFetch = t.mock.method(global, 'fetch', async () => successFetchResponse);
+
+        window.history.pushState({}, '', '/');
+        assert.equal(window.location.pathname, '/');
+
         await config.loadWithTimeout();
 
-        expect(config.isInitialised()).toBeTruthy();
-        expect(global.fetch).toBeCalledTimes(1);
-        expect(global.fetch).toBeCalledWith('/info.json');
+        assert.ok(config.isInitialised());
+        assert.equal(mockFetch.mock.callCount(), 1);
+        assert.equal(mockFetch.mock.calls[0].arguments[0], '/info.json');
     });
 
-    it('Can catch fetch error as expected', async () => {
-        global.fetch = mockFetch.mockResolvedValue({ ok: false, json: () => Promise.resolve({}) });
+    it('Can catch fetch error as expected', async t => {
+        const mockFetch = t.mock.method(global, 'fetch', async () => ({
+            ok: false,
+            json: async () => ({}),
+        }));
+
         await config.loadWithTimeout();
 
-        expect(config.isInitialised()).toBeFalsy();
-        expect(mockFetch).toBeCalledTimes(1);
+        assert.equal(config.isInitialised(), false);
+        assert.equal(mockFetch.mock.callCount(), 1);
     });
 
-    it('Can timeout after 10 seconds', () => {
+    it('Can timeout after 10 seconds', t => {
         // fetch takes more than 10 seconds
-        global.fetch = mockFetch.mockImplementation(async () => {
+        t.mock.method(global, 'fetch', async () => {
             await waitForMs(11 * 1000);
         });
 
-        vi.useFakeTimers();
+        t.mock.timers.enable({ apis: ['setTimeout'] });
         config.loadWithTimeout();
 
         // resolve after 10 seconds
-        vi.advanceTimersByTime(10001);
+        t.mock.timers.tick(10001);
 
-        expect(config.isInitialised()).toBeFalsy();
+        assert.equal(config.isInitialised(), false);
     });
 });

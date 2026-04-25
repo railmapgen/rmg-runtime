@@ -1,6 +1,6 @@
-import config from './config';
-import { UNKNOWN_COMPONENT } from '../util/constant';
-import logger from './logger';
+import config from './config.ts';
+import { UNKNOWN_COMPONENT } from '../util/constant.ts';
+import logger from './logger.ts';
 
 type StorageEventHandler = (value: string | null) => void;
 const eventListeners: Partial<Record<string, StorageEventHandler[]>> = {};

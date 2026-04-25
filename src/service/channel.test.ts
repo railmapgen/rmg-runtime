@@ -1,5 +1,7 @@
-import channel, { RMG_RUNTIME_CHANNEL_NAME } from './channel';
-import { waitFor } from '@testing-library/dom';
+import { afterEach, beforeEach, describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import 'global-jsdom/register';
+import channel, { RMG_RUNTIME_CHANNEL_NAME } from './channel.ts';
 
 describe('Channel', () => {
     let testChannel: BroadcastChannel;
@@ -15,21 +17,21 @@ describe('Channel', () => {
         testChannelReceives = [];
     });
 
-    it('Can emit event as expected', async () => {
+    it('Can emit event as expected', async t => {
         channel.postEvent('SET_LANGUAGE', 'en');
 
-        await waitFor(() => expect(testChannelReceives).toHaveLength(1));
-        expect(testChannelReceives).toContainEqual({ event: 'SET_LANGUAGE', data: 'en' });
+        await t.waitFor(() => assert.equal(testChannelReceives.length, 1));
+        assert.partialDeepStrictEqual(testChannelReceives[0], { event: 'SET_LANGUAGE', data: 'en' });
     });
 
-    it('Can receive registered event as expected', async () => {
+    it('Can receive registered event as expected', async t => {
         const channelReceives: unknown[] = [];
         channel.onMessage('SET_LANGUAGE', data => channelReceives.push(data));
 
         testChannel.postMessage({ event: 'SET_LANGUAGE', data: 'en' });
         testChannel.postMessage({ event: 'SET_COLOUR_MODE', data: 'system' });
 
-        await waitFor(() => expect(channelReceives).toHaveLength(1));
-        expect(channelReceives).toContain('en');
+        await t.waitFor(() => assert.equal(channelReceives.length, 1));
+        assert.ok(channelReceives.includes('en'));
     });
 });

@@ -1,12 +1,4 @@
-global.fetch = vi.fn().mockImplementation(() => {
-    return Promise.resolve({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve({}),
-    });
-});
-
-class MockFontFace {
+export class MockFontFace {
     family: string;
 
     loadingResolver?: (value: MockFontFace) => void = undefined;
@@ -46,7 +38,3 @@ class MockFontFace {
         return this.loadingPromise;
     }
 }
-
-vi.stubGlobal('FontFace', MockFontFace);
-
-Object.defineProperty(document, 'fonts', { value: new Set() });

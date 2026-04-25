@@ -1,6 +1,6 @@
 // DO NOT IMPORT config.ts
-import { hashCode, intToRGB } from '../util/util';
-import { UNKNOWN_COMPONENT } from '../util/constant';
+import { hashCode, intToRGB } from '../util/util.ts';
+import { UNKNOWN_COMPONENT } from '../util/constant.ts';
 
 let componentName = UNKNOWN_COMPONENT;
 let componentRGB: string = intToRGB(hashCode(UNKNOWN_COMPONENT));

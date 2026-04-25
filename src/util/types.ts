@@ -1,4 +1,4 @@
-import { RmgEnv, RmgInstance } from './rmg-types';
+import { RmgEnv, RmgInstance } from './rmg-types.ts';
 
 export interface RmgRuntimeInfoConfig {
     component: string;
