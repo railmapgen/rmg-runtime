@@ -18,15 +18,15 @@
         "global-jsdom": "^29.0.0",
         "jsdom": "^29.0.2",
         "prettier": "^3.8.3",
+        "tsdown": "^0.21.10",
         "typedoc": "^0.28.19",
-        "typescript": "^5.9.3",
+        "typescript": "^6.0.3",
         "typescript-eslint": "^8.59.0",
-        "unbuild": "^3.6.1",
         "vite": "^8.0.10"
     },
     "scripts": {
         "dev": "vite --host",
-        "build:package": "unbuild",
+        "build:package": "tsc && tsdown src/index.ts src/util/index.ts",
         "build:docs": "typedoc --tsconfig tsconfig.prod.json",
         "build": "npm run build:package && npm run build:docs",
         "test": "node --experimental-transform-types --test-force-exit --test",
@@ -35,7 +35,7 @@
     },
     "version": "13.0.4",
     "main": "./dist/index.mjs",
-    "types": "./dist/index.d.ts",
+    "types": "./dist/index.d.mts",
     "exports": {
         ".": {
             "import": "./dist/index.mjs"

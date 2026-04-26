@@ -7,6 +7,8 @@ import { MockFontFace } from '../setupTests.ts';
 
 globalThis.FontFace = MockFontFace as unknown as typeof FontFace;
 if (!document.fonts) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     document.fonts = {
         add: () => {},
     };
