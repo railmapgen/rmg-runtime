@@ -4,7 +4,7 @@ export enum RmgEnv {
     PRD = 'PRD',
 }
 
-export type RmgInstance = 'Org' | 'GitHub' | 'GitLab' | 'Tauri' | 'localhost' | 'unknown';
+export type RmgInstance = 'Org' | 'GitHub' | 'GitLab' | 'Tauri' | 'AppStore' | 'localhost' | 'unknown';
 
 type RMNotificationType = 'info' | 'success' | 'warning' | 'error';
 
