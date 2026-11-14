@@ -11,6 +11,7 @@ if (!document.fonts) {
     // @ts-ignore
     document.fonts = {
         add: () => {},
+        delete: () => {},
     };
 }
 
@@ -92,7 +93,18 @@ describe('Fonts', () => {
         const result = await fonts.loadFont('GenYoMin', {
             configs: [
                 [
-                    { source: "url('/path/to/font1')", descriptors: { unicodeRange: 'U+4E00-4FFF' } },
+                    {
+                        source: "url('/path/to/font1')",
+                        descriptors: {
+                            unicodeRange: 'U+4E00-4FFF',
+                            weight: '400 700',
+                            style: 'normal',
+                            display: 'swap',
+                            featureSettings: '"kern" 1',
+                            variationSettings: '"wght" 600',
+                            ascentOverride: '90%',
+                        },
+                    },
                     { source: "url('/path/to/font2')", descriptors: { unicodeRange: 'U+5000-57FF' } },
                 ],
             ],
@@ -107,9 +119,60 @@ describe('Fonts', () => {
             `@font-face {
     font-family: 'GenYoMin';
     src: url('data:font/woff2;base64,TU9DS0VE');
-    unicodeRange: U+4E00-4FFF;
+    unicode-range: U+4E00-4FFF;
+font-weight: 400 700;
+font-style: normal;
+font-display: swap;
+font-feature-settings: "kern" 1;
+font-variation-settings: "wght" 600;
+ascent-override: 90%;
 }`
         );
+    });
+
+    it('Retries only failed subsets on demand and preserves the original loaded notification', async t => {
+        const definition = {
+            displayName: 'Subsets',
+            url: 'https://example.com/fonts',
+            configs: [
+                ['latin', 'greek', 'han', 'kana'].map(source => ({ source: `url('/${source}.woff2')` })),
+                { source: 'local(Fallback)' },
+            ],
+        };
+        const result = await fonts.loadFont('Subsets', definition);
+        assert.ok(result);
+        const original = result.configs.map(config => config.font);
+        await original[0].load();
+        await t.waitFor(() => assert.equal(testChannelReceives.length, 1));
+        testChannelReceives = [];
+        (original[3] as unknown as MockFontFace).status = 'loading';
+        const add = t.mock.method(document.fonts, 'add');
+        const remove = t.mock.method(document.fonts, 'delete');
+        const load = t.mock.method(MockFontFace.prototype, 'load');
+
+        for (let attempt = 1; attempt <= 2; attempt++) {
+            const failed = result.configs[1].font as unknown as MockFontFace;
+            failed.status = 'error';
+            failed.loadingRejecter!('NetworkError');
+            assert.strictEqual(await fonts.loadFont('Subsets'), result);
+            assert.notStrictEqual(result.configs[1].font, failed);
+            assert.equal(result.configs[1].font.status, 'unloaded');
+            assert.equal(load.mock.callCount(), 0);
+            assert.equal(add.mock.callCount(), attempt);
+            assert.equal(remove.mock.callCount(), attempt);
+            assert.strictEqual(remove.mock.calls[attempt - 1].arguments[0], failed);
+            await fonts.loadFont('Subsets');
+            assert.equal(add.mock.callCount(), attempt);
+        }
+        for (const index of [0, 2, 3]) assert.strictEqual(result.configs[index].font, original[index]);
+        assert.equal(result.displayName, definition.displayName);
+        assert.equal(result.url, definition.url);
+        await result.configs[1].font.load();
+        await t.waitFor(() => assert.equal(testChannelReceives.length, 1));
+        assert.partialDeepStrictEqual(testChannelReceives[0], {
+            event: 'LOAD_REMOTE_FONT',
+            data: { family: 'Subsets', definition },
+        });
     });
 
     it('Can broadcast remote font loaded event', async t => {
