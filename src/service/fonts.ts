@@ -24,6 +24,7 @@ type LoadedFont = Omit<FontFaceDefinition, 'configs'> & {
 
 // store
 let loadedFonts: Record<string, LoadedFont> = {};
+const remoteFontLoadedCallbacks = new WeakMap<LoadedFont, () => void>();
 const getLoadedFonts = () => loadedFonts;
 export const _resetLoadedFonts = () => (loadedFonts = {});
 
@@ -45,11 +46,24 @@ const getFontFaceUrl = (config: FontFaceConfig) => {
     }
     return new URL(path, window.location.href);
 };
+const cssFontDescriptorNames: Record<string, string> = {
+    style: 'font-style',
+    weight: 'font-weight',
+    stretch: 'font-stretch',
+    variant: 'font-variant',
+    display: 'font-display',
+    featureSettings: 'font-feature-settings',
+    variationSettings: 'font-variation-settings',
+};
 const getCssFontFaceRule = (family: string, config: FontFaceConfig) => `@font-face {
     font-family: '${family}';
     src: ${config.source};
     ${Object.entries(config.descriptors ?? {})
-        .map(([k, v]) => `${k}: ${v};`)
+        .map(([key, value]) => {
+            const descriptor =
+                cssFontDescriptorNames[key] ?? key.replace(/[A-Z]/g, character => `-${character.toLowerCase()}`);
+            return `${descriptor}: ${value};`;
+        })
         .join('\n')}
 }`;
 
@@ -71,7 +85,7 @@ const loadSingleFontFace = async (
         if (isLocalFont(config)) {
             await font.load();
         } else {
-            font.loaded.then(onRemoteLoaded);
+            font.loaded.then(onRemoteLoaded, error => logger.warn(`Failed to load remote font ${family}`, error));
         }
         document.fonts.add(font);
         loadedFonts[family] = { configs: [{ ...config, font }] };
@@ -94,7 +108,7 @@ const loadMultipleFontFaces = async (
     const fonts: LoadedFont['configs'] = [];
     configs.forEach(config => {
         const font = new FontFace(family, config.source, config.descriptors);
-        font.loaded.then(onRemoteLoaded);
+        font.loaded.then(onRemoteLoaded, error => logger.warn(`Failed to load remote font ${family}`, error));
         document.fonts.add(font);
         fonts.push({ ...config, font });
     });
@@ -105,7 +119,23 @@ const loadMultipleFontFaces = async (
 const loadFont = async (family: string, definition?: FontFaceDefinition): Promise<undefined | LoadedFont> => {
     if (family in loadedFonts) {
         // use PostScript name as family name to avoid font-weight conflict
-        return loadedFonts[family];
+        const loadedFont = loadedFonts[family];
+        for (const config of loadedFont.configs) {
+            if (config.font.status !== 'error') continue;
+            const font = new FontFace(family, config.source, config.descriptors);
+            if (isLocalFont(config)) {
+                await font.load();
+            } else {
+                // Register remote replacements without downloading unused Unicode subsets.
+                font.loaded.then(remoteFontLoadedCallbacks.get(loadedFont), error =>
+                    logger.warn(`Failed to load remote font ${family}`, error)
+                );
+            }
+            document.fonts.add(font);
+            document.fonts.delete(config.font);
+            config.font = font;
+        }
+        return loadedFont;
     }
 
     let parsedDefinition: FontFaceDefinition;
@@ -132,6 +162,7 @@ const loadFont = async (family: string, definition?: FontFaceDefinition): Promis
 
     const font = loadedFonts[family];
     if (font) {
+        remoteFontLoadedCallbacks.set(font, onRemoteLoaded);
         font.displayName = parsedDefinition.displayName;
         font.url = parsedDefinition.url;
         return loadedFonts[family];
